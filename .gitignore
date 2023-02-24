@@ -1,0 +1,27 @@
+﻿################################################################################
+# Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
+################################################################################
+
+/CoreMvc/.vs/MobaSpace/v16/Server/sqlite3
+/CoreMvc/MobaSpace.Core.Data/bin/Debug/netcoreapp3.1
+/CoreMvc/MobaSpace.Core.Data/obj
+/CoreMvc/MobaSpace.Web.UI/bin/Debug/netcoreapp3.1
+/CoreMvc/MobaSpace.Web.UI/obj
+/CoreMvc/MobaSpace.Web.UI/MobaSpace.Web.UI.csproj.user
+/CoreMvc/.vs/
+/CoreMvc/.vs
+/CoreMvc/MobaSpace.Core.Data/bin
+/CoreMvc/MobaSpace.Core/obj
+/CoreMvc/MobaSpace.Core/bin
+/CoreMvc/MobaSpace.Web.UI/wwwroot/images/patients/launchButton.png
+/CoreMvc/MobaSpace.Web.UI/wwwroot/images/patients/PauseButton.png
+/CoreMvc/MobaSpace.Web.UI/wwwroot/images/patients/Observable
+/CoreMvc/packages
+/CoreMvc/ApiWithings
+/CoreMvc/MobaSpace.Web.UI/wwwroot/images/mobaspace_carre.png
+/CoreMvc/MobaSpace.Web.UI/bin/Release/netcoreapp3.1
+/CoreMvc/MobaSpace.Web.UI/Properties/PublishProfiles/FolderProfile.pubxml.user
+/CoreMvc/MobaSpace.Web.UI/Properties/PublishProfiles/FolderProfile.pubxml
+.vscode/tasks.json
+.vscode/launch.json
+/CoreMvc/MobaSpace.Web.UI/wwwroot/debug.log

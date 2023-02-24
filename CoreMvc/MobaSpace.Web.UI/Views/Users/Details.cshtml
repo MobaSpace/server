@@ -1,0 +1,90 @@
+﻿@model MobaSpace.Web.UI.ViewModels.UserRoleViewModel
+@{
+    ViewData["Title"] = "Utilisateurs";
+    ViewData["sub-Title"] = " - Détails";
+}
+<div class="container">
+    <h1>Détails</h1>
+
+    <div>
+        <h4>Utilisateur</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                Identifiant
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.UserName)
+            </dd>
+            <dt class="col-sm-3">
+                Nom
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.UserSurname)
+            </dd>
+            <dt class="col-sm-3">
+                Prenom
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.UserFirstname)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Email)
+            </dd>
+            <dt class="col-sm-3">
+                Email confirmé
+            </dt>
+            <dd class="col-sm-9">
+                @(Model.User.EmailConfirmed ? "Oui" : "Non")
+            </dd>
+            <dt class="col-sm-3">
+                Créé le
+            </dt>
+            <dd class="col-sm-9">
+                @Model.User.Creation.ToLocalTime()
+            </dd>
+            <dt class="col-sm-3">
+                Dernière connexion
+            </dt>
+            <dd class="col-sm-9">
+                @Model.User.LastConnection.ToLocalTime()
+            </dd>
+            <dt class="col-sm-3">
+                Canal de Notification Android
+            </dt>
+            <dd class="col-sm-9">
+                @Model.User.CanalNotif
+            </dd>
+            <dt class="col-sm-3">
+                Contact par appel
+            </dt>
+            <dd class="col-sm-9">
+                @Model.User.Appel
+            </dd>
+            <dt class="col-sm-3">
+                Rattacher à NetSOINS
+            </dt>
+            <dd class="col-sm-9">
+                @(Model.User.Linked2NetSOINS ? "Oui" : "Non")
+            </dd>
+            <dt class="col-sm-3">
+                Rôle
+            </dt>
+            <dd class="col-sm-9">
+                <ul>
+                    @foreach (var role in Model.UserRoles.Where(ur => ur.Selectionne))
+                    {
+        <li>@role.Nom</li>
+}
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.User.Id">Modifier</a> |
+        <a asp-action="Index">Retour</a>
+    </div>
+</div>

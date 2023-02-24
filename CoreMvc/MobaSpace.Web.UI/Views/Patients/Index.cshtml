@@ -1,0 +1,87 @@
+﻿@model IEnumerable<MobaSpace.Core.Data.Models.PatientC>
+
+@{
+    ViewData["Title"] = "Résidents";
+    ViewData["sub-Title"] = " - Index";
+}
+<div id="divPatient" class="container-w-100">
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        var isFirst = true;
+        var oldwidth = $(window).width();
+        updatePartialView();
+
+        window.addEventListener('resize', updatePartialView);
+
+
+        // Update partial alarme
+        function updatePartialView() {
+            var screenWidth = $(window).width()
+            var newWidthType = sizeScreenType(screenWidth);
+            var oldWidthType = sizeScreenType(oldwidth);
+            if (newWidthType != oldWidthType || isFirst) {
+                $.ajax({
+                    url: "/Patients/_PatientsPartial",
+                    type: 'GET',
+                    data: { size: screenWidth },
+                    success: function (partialView) {
+                        if (!isFirst) {
+                            var patientId = document.getElementById('SelectPatientId').value
+                            var modalType = document.getElementById('ModalType').value
+                        }
+                        $('#divPatient').html(partialView);
+                        $('.modal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        isFirst = false;
+                        oldwidth = $(window).width();
+                        if (patientId != "") {
+                            if (modalType == "Nuit") {
+                                document.getElementById("btn_Nuit_" + patientId).click();
+                            } else if (modalType == "Jour") {
+                                document.getElementById("btn_Jour_" + patientId).click();
+                            } else if (modalType == "GraphNuit") {
+                                document.getElementById("btn_Graph_Nuit_" + patientId).click();
+                            } else if (modalType == "ModalTabNuit") {
+                                document.getElementById("btn_Tab_Nuit_" + patientId).click();
+                            }
+
+                        } else {
+
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        console.error("error during view update");
+                    }
+                });
+            }
+        }
+
+        function sizeScreenType(width) {
+            if (width < 670) {
+                return "sm";
+            }
+            else if (width < 1150 && width > 670) {
+                return "sm-lg"
+            }
+            else if (width < 1600 && width > 1150) {
+                return "md"
+            }
+            else {
+                return "lg"
+            }
+        }
+    </script>
+    <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="~/lib/plotly/plotly-latest.min.js"></script>
+    <script src="~/js/ExportToExcel.js" asp-append-version="true"></script>
+    <script src="~/js/refreshPatient.js" asp-append-version="true"></script>
+    <script src="~/js/hideCarouselControl.js" asp-append-version="true"></script>
+    <script src="~/js/StatisticNight.js" asp-append-version="true"></script>
+    <script src="~/js/ModalJour.js" asp-append-version="true"></script>
+}

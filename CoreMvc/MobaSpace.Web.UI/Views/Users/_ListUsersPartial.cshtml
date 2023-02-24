@@ -1,0 +1,71 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using MobaSpace.Core.Data.Models
+@model IEnumerable<MobaSpace.Web.UI.ViewModels.UserRoleViewModel>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Identifiant
+            </th>
+            <th>
+                Prenom
+            </th>
+            <th>
+                Nom
+            </th>
+            <th>
+                Rôle(s)
+            </th>
+            <th>
+                Dernière connexion
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (!User.IsInRole(Roles.Administrateur) && item.UserRoles.Find(ur => ur.Nom == Roles.Administrateur && ur.Selectionne == true) != null)
+            {
+
+            }
+            else
+            {
+                <tr>
+                    <td data-label="NomUtilisateur">
+                        @Html.DisplayFor(modelItem => item.User.UserName)
+                    </td>
+                    <td data-label="Prenom">
+                        @Html.DisplayFor(modelItem => item.User.UserFirstname)
+                    </td>
+                    <td data-label="Nom">
+                        @Html.DisplayFor(modelItem => item.User.UserSurname)
+                    </td>
+                    <td data-label="Rôle(s)">
+                        <ul>
+                            @foreach (var role in item.UserRoles.Where(ur => ur.Selectionne))
+                            {
+                                <li>@role.Nom</li>
+                            }
+                        </ul>
+                    </td>
+                    <td data-label="Dernière connexion">
+                        @item.User.LastConnection.ToLocalTime()
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.User.Id">Modifier</a> |
+                        <a asp-action="Details" asp-route-id="@item.User.Id">Détails</a> |
+                        @if (item.User.UserName != User.Identity.Name)
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.User.Id">Supprimer</a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

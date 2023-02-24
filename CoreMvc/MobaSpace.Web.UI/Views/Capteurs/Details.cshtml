@@ -1,0 +1,85 @@
+﻿@model MobaSpace.Core.Data.Models.Capteur
+
+@{
+    ViewData["Title"] = "Capteurs";
+    ViewData["sub-Title"] = " - Détails";
+
+}
+<div class="container">
+    <h1>Détails</h1>
+
+    <div>
+        <h4>Capteur</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Marque)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Marque)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Modele)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Modele)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Type)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Type)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.EtatOK)
+            </dt>
+            <dd class="col-sm-10">
+                @if (Model.EtatOK == true)
+                {
+                    <img src="~/images/rond_vert_256x256px.png" style="max-height: 20px; max-width: 20px;" alt="IsOk" />
+                }
+                else
+                {
+                    <img src="~/images/rond-rouge_256x256px.png" style="max-height: 20px; max-width: 20px;" alt="IsNotOk" />
+                }
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Identifiant)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Identifiant)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Creation)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.Creation.ToLocalTime()
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Modification)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.Modification.ToLocalTime()
+            </dd>
+            <dt class="col-sm-2">
+                Résident(s)
+            </dt>
+            <dd class="col-sm-10">
+                @foreach (var ac in Model.ApisCapteurs)
+                {
+                    if (ac.Api.Patient != null)
+                    {
+                        <ul>
+                            <li>Chambre @ac.Api.Patient.UnencriptedPatient.Chambre</li>
+                        </ul>
+                    }
+                }
+            </dd>
+
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Index">Retour</a>
+    </div>
+</div>
+

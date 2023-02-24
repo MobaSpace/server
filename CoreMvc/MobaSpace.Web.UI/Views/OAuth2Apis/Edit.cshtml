@@ -1,0 +1,43 @@
+﻿@model MobaSpace.Web.UI.ViewModels.OAuth2ApiViewModel
+
+@{
+    ViewData["Title"] = "Api";
+    ViewData["sub-Title"] = " - Éditer";
+}
+<div class="container">
+    <h1>Modifier</h1>
+
+    <h4>OAuth2Api</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Api.Id" />
+                <div class="form-group">
+                    <label asp-for="Api.ApiName" class="control-label">Nom de l'Api</label>
+                    <input asp-for="Api.ApiName" class="form-control" />
+                    <span asp-validation-for="Api.ApiName" class="text-danger"></span>
+                </div>
+                @if (Model.Api.Provider.Equals("Mobaspace"))
+                {
+                    <div class="form-group">
+                        <label asp-for="Capteur.Identifiant"></label> (MAC)
+                        <input asp-for="Capteur.Identifiant" value="@Model.Capteur.Identifiant" pattern="^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$" class="form-control" />
+                        <span asp-validation-for="Capteur.Identifiant" class="text-danger"></span>
+                    </div>
+                }
+                <div class="form-group">
+                    <input type="submit" value="Sauver" class="btn btn-outline-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index">retour</a>
+    </div>
+</div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

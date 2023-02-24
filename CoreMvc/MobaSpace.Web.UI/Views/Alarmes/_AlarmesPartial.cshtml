@@ -1,0 +1,189 @@
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Identity
+@using MobaSpace.Core.Data.Models
+@using System.Web;
+@model IEnumerable<MobaSpace.Core.Data.Models.Alarme>;
+@inject SignInManager<User> SignInManager;
+@{
+    int columnCount = ViewBag.nbColumn;
+    int columnIndex = 0;
+    int nbrow = 0;
+    var admin = User.IsInRole(Roles.Administrateur);
+
+    var soi = User.IsInRole(Roles.Soignant);
+}
+
+
+
+    <div id="divAlarm" class="container-w-100">
+        <div class="row">
+            <a id="CloseAllAlarmes" class="mt-4 float-right btn btn-outline-primary" type="submit" asp-action="AcquitterAll">Acquitter toutes les alarmes</a>
+        </div>
+        
+        <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationModalLabel"> L'alarme correspond-elle à un événement réel (chute ou départ du lit) ? </h5>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                         </button>
+                    </div>
+                    <div class="modal-body">
+                        <a id="isTrue" class="btn btn-outline-success" style="margin-top: 2%;" type="submit" asp-action="Acquitter" asp-route-idAlarme="dummy"  asp-route-confirmation="true">Oui</a>
+                        <a id="isFalse" class="btn btn-outline-danger" style="margin-top: 2%;" type="submit" asp-action="Acquitter" asp-route-idAlarme="dummy" asp-route-confirmation="false">Non</a>
+                        <a id="unknown" class="btn btn-outline-warning" style="margin-top: 2%;" type="submit" asp-action="Acquitter" asp-route-idAlarme="dummy" asp-route-confirmation="null">Je ne sais pas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="list-Alarmes" class="container-w-100 carousel slide carousel-multi-item" data-interval="false" data-ride="carousel">
+            <div class="container">
+                @if (Model.Count() != 0)
+                {
+                    <div class="row">
+                        <a class="btn-floating" href="#list-Alarmes" data-slide="prev"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E" width="100" height="45"></a>
+                        <a class="btn-floating right-btn" href="#list-Alarmes" data-slide="next"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E" width="100" height="45"></a>
+                    </div>
+                }
+            </div>
+            <ol class="carousel-indicators carousel-bar-indicators">
+                @for (int i = 0; i < Model.Count(); i = i + columnCount)
+                {
+
+                    @if (nbrow == 0)
+                    {
+                        <li data-target="#list-Alarmes" data-slide-to="@nbrow" class="active"></li>
+                        nbrow++;
+                    }
+                    else
+                    {
+                        <li data-target="#list-Alarmes" data-slide-to="@nbrow"></li>
+                        nbrow++;
+                    }
+
+                }
+
+            </ol>
+            <div class="carousel-inner" role="listbox"></div>
+            @if (Model.Count() == 0)
+            {
+                <h1 class="text-center">Il n'y a pas d'alarmes</h1>
+            }
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                var alarme = Model.ElementAt(i);
+                var status = "danger";
+                @if (alarme.StringPriorite().Equals("HAUTE"))
+                {
+                    status = "danger";
+                }
+                else if (alarme.StringPriorite().Equals("MOYENNE"))
+                {
+                    status = "orange";
+                }
+                else if (alarme.StringPriorite().Equals("BASSE"))
+                {
+                    status = "warning";
+                }
+                else if (alarme.StringPriorite().Equals("AUCUNE")) {
+                    status = "secondary";
+                }
+                @BeginDivRow(ref columnIndex, columnCount, i);
+                <div name="card-alarmes">
+                    <div class="card border-@status h-95" style="width: 20rem; margin-top:15px">
+                        <h5 class="card-header text-center bg-@status"> Chambre @alarme.Patient.UnencriptedPatient.NumCh @alarme.Patient.UnencriptedPatient.Chambre</h5>
+                            @if (alarme.Capteur.Marque == "Mobaspace" && alarme.StringPriorite().Equals("BASSE"))
+                            {
+                                <center><img class="card-img-top img-alarmes mt-lg-4" src="~/images/batterie.png" style="max-height: 150px; max-width: 150px;" /></center>
+                            }
+                            else if (alarme.Capteur != null)
+                            {
+                                <center><img class="card-img-top img-alarmes" src="@alarme.Capteur.CheminImage" style="max-height: 150px; max-width: 150px;" /></center>
+                            }
+                            else
+                            {
+                                <center><img class="card-img-top img-alarmes" src="~/images/Tracker_icon.png" style="max-height: 145px; max-width: 145px;" /></center>
+                            }
+
+                        <div class="card-body ">
+                            @if (alarme.Capteur.Marque == "Mobaspace" && alarme.StringPriorite().Equals("BASSE"))
+                            {
+                               <center class="mt-4"> @alarme.Capteur.Designation </center>
+                            }
+                            else if (alarme.Capteur != null)
+                            {
+                               <center> @alarme.Capteur.Designation </center>
+                            }
+                            else
+                            {
+                               <center> @Html.Raw("Smart Tracker") </center>
+                            }
+
+                            <br />
+                            <br />
+                            <div class="list-group-item">
+                                <b>Priorité : </b><a><br /> @alarme.StringPriorite()</a>
+                            </div>
+                            <div class="list-group-item">
+                                <b>Date : </b><a name="AlarmTime"><br /> @alarme.DureeStr</a>
+                            </div>
+                            <div class="list-group-item">
+                                <b>Description : </b><a><br />  @alarme.Description</a>
+                            </div>
+                            @if (alarme.StringPriorite() == "HAUTE")
+                            {
+                                <a class="btn btn-outline-primary" style="margin-top: 2%;" onclick="giveId(@alarme.Id)" data-toggle="modal" data-target="#confirmationModal" >Acquitter</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-outline-primary" style="margin-top: 2%;" type="submit" asp-action="Acquitter" asp-route-idAlarme=@alarme.Id asp-route-confirmation="null">Acquitter</a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                @EndDivRow(ref columnIndex, columnCount)
+            }
+            @EndDivRow(ref columnIndex, columnCount)
+        </div>
+    </div>
+
+<script>
+    function giveId(alarmeId) {
+
+        $('#isTrue').attr('href', $('#isTrue').attr('href').replace("dummy", alarmeId));
+        $('#isFalse').attr('href', $('#isFalse').attr('href').replace("dummy", alarmeId));
+        $('#unknown').attr('href', $('#unknown').attr('href').replace("dummy", alarmeId));
+
+    }
+
+</script>
+
+@functions
+{
+    IHtmlContent BeginDivRow(ref int columnIndex, int columnCount , int nbrow)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        if (columnIndex == 0 && nbrow == 0)
+        {
+            cnt = Html.Raw("<div class=\"carousel-item active\"><div class=\"row\">");
+        }else if(columnIndex == 0 && nbrow != 0){
+            cnt = Html.Raw("<div class=\"carousel-item\"><div class=\"row \">");
+        }
+        return cnt;
+    }
+
+    IHtmlContent EndDivRow(ref int columnIndex, int columnCount)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        columnIndex++;
+        if (columnIndex >= columnCount)
+        {
+            columnIndex = 0;
+            cnt = Html.Raw("</div></div>");
+        }
+        return cnt;
+    }
+}

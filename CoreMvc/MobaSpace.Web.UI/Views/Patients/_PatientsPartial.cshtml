@@ -1,0 +1,639 @@
+﻿@using Microsoft.AspNetCore.Html
+@using System.Globalization;
+@using MobaSpace.Core.Data.Models
+@using MobaSpace.Core.Utils;
+@using Newtonsoft.Json.Linq;
+@using System.Text.Json;
+@model IEnumerable<MobaSpace.Core.Data.Models.PatientC>
+
+@{
+    var admin = User.IsInRole(Roles.Administrateur);
+    var soi = User.IsInRole(Roles.Soignant);
+    var inf = User.IsInRole(Roles.Infirmier);
+    var culture = new System.Globalization.CultureInfo("fr-FR");
+    int columnCount = ViewBag.nbColumn;
+    int columnIndex = 0;
+    int nbrow = 0;
+    long MaxId = 0;
+    TimeSpan? DefaultTime = DateTime.Now - new DateTime();
+}
+
+<input id="SelectPatientId" value="" hidden="hidden" />
+<input id="ModalType" value="" hidden="hidden" />
+
+<div class="container">
+    <div class="row">
+        @if (inf || admin)
+        {
+            <a class="btn btn-success right-btn" asp-action="Create">Ajouter un résident</a>
+        }
+    </div>
+</div>
+<!-- display graph for Nuit -->
+<div class="modal" id="ModalGraph">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 id="titleGraphModal"></h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div id="GraphNR">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div id="GraphNS">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div id="GraphSN">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ModalTabNuit">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 id="titleTabNuit"></h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body degrade">
+                <div id="TabNuit7j" class="container">
+
+                </div>
+                <button class="btn mt-2 btn-primary" onclick="HtmlTOExcel('xlsx')">Télécharger le tableau</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="ModalJour">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 id="titleCurrentJourModal">Détails du Jour</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <p hidden id="IdJour"></p>
+            <p hidden id="IdDayPatient"></p>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table border-black border-rounded bg-light">
+                        <tr>
+                            <th class="w-50 border-right" id="dateCurrentJour"></th>
+                            <th class="w-50">Evolution au cours des 7 derniers jours</th>
+                        </tr>
+                        <tr>
+                            <td class="w-50 border-right">
+                                <div class="row ml-2 mt-5">
+                                    <div class="col-3">
+                                        <img src="~/images/patients/Jour/Pas.png" width="50px" height="50px" />
+                                    </div>
+                                    <div class="col">
+                                        <p class="mt-3"><b id="NbTotalPas"></b><b> pas</b></p>
+                                    </div>
+                                </div>
+                                <div class="row ml-2 mt-5">
+                                    <div class="col-3">
+                                        <img class="mt-2" src="~/images/patients/Jour/Horloge.png" width="30px" height="30px" />
+                                        <img src="~/images/patients/Debout.png" width="50px" height="50px" />
+                                    </div>
+                                    <div class="col">
+                                        <p class="mt-2"><b>temps total de déplacement : </b><b id="TempsDeplacement"></b></p>
+                                    </div>
+                                </div>
+                                <div class="row ml-2 mt-5">
+                                    <div class="col-3">
+                                        <img src="~/images/patients/Jour/PasEtHorloge.png" width="50px" height="50px" />
+                                    </div>
+                                    <div class="col">
+                                        <p class="mt-2"><b id="NbPas/s"> </b><b> pas / seconde</b></p>
+                                    </div>
+                                </div>
+                                <div class="row ml-2 mt-5">
+                                    <div class="col-3">
+                                        <img class="mt-2" src="~/images/patients/Jour/Horloge.png" width="30px" height="30px" />
+                                        <img src="~/images/patients/Assis.png" width="50px" height="50px" />
+                                    </div>
+                                    <div class="col">
+                                        <p class="mt-1"><b>temps total sans déplacement : </b><b id="TempsSansDeplacement"></b></p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div id="GraphJour">
+
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="row">
+                    <a class="left" style="cursor:pointer" id="prevbutton" onclick="ChangeDay(document.getElementById('IdJour').value, document.getElementById('IdDayPatient').value, 'prev')">
+                        <img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E" width="100" height="45">
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right right-btn" style="cursor:pointer" id="nextbutton" onclick="ChangeDay(document.getElementById('IdJour').value, document.getElementById('IdDayPatient').value, 'next')">
+                        <img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E" width="100" height="45">
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Generate Modal with carousel for every patient-->
+@for (int i = 0; i < Model.Count(); i++)
+{
+    var patient = Model.ElementAt(i);
+    <div class="modal fade" id="modal_@patient.Id">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="DateNuits_@patient.Id"></h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <div class="modal-body degrade">
+                    @if (patient.Nuits.Count != 0)
+                    {
+                        bool isFirst = true;
+                        @if (MaxId < patient.Nuits.Max(n => n.Id))
+                        {
+                            MaxId = patient.Nuits.Max(n => n.Id);
+                        }
+                        <div id="carouselPatient_@patient.Id" class="carousel slide carousel-fade" data-ride="carousel" data-interval="false">
+                            <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                                @{ List<MobaSpace.Core.Data.Models.NuitC> DateNuits;
+                                    try
+                                    {
+                                        DateNuits = patient.Nuits.Where(n => n.UnencriptedNuit.DateNuit.Date <= DateTime.Now.Date && n.UnencriptedNuit.DateNuit.Date > DateTime.Now.Date.AddDays(-8)).OrderByDescending(n => n.UnencriptedNuit.DateDebut.Value.Date).ToList();
+                                    }
+                                    catch
+                                    {
+                                        DateNuits = patient.Nuits.Where(n => n.UnencriptedNuit.DateNuit.Date <= DateTime.Now.Date && n.UnencriptedNuit.DateNuit.Date > DateTime.Now.Date.AddDays(-8)).ToList();
+                                    }
+                                }
+                                @foreach (var nuit in DateNuits)
+                                {
+                                    var NuitCouleur = "danger";
+                                    var ClassCarousel = "";
+                                    if (nuit.UnencriptedNuit.ScoreNuit > 80)
+                                    {
+                                        NuitCouleur = "Success";
+                                    }
+                                    else if (nuit.UnencriptedNuit.ScoreNuit > 60)
+                                    {
+                                        NuitCouleur = "jaune";
+                                    }
+                                    else if (nuit.UnencriptedNuit.ScoreNuit > 40)
+                                    {
+                                        NuitCouleur = "orange";
+                                    }
+                                    else if (nuit.UnencriptedNuit.ScoreNuit >= 0)
+                                    {
+                                        NuitCouleur = "danger";
+                                    }
+
+                                    if (isFirst)
+                                    {
+                                        ClassCarousel = "carousel-item active";
+                                        isFirst = false;
+                                    }
+                                    else if (!isFirst)
+                                    {
+                                        ClassCarousel = "carousel-item";
+                                    }
+                                    <p name="dateDebut" style="display: none">@nuit.UnencriptedNuit.DateDebut</p>
+                                    <div name="carousel-@patient.Id-item" class="@ClassCarousel" data-interval="false">
+                                        <div class="table-responsive">
+                                            <table class="table border-black border-rounded bg-light">
+                                                <tr>
+                                                    <th colspan="3" class="text-center border-bottom-black">
+                                                        @if (nuit.UnencriptedNuit.DateDebut != null && nuit.UnencriptedNuit.DateFin != null)
+                                                        {
+                                                            <h3>
+                                                                @patient.UnencriptedPatient.Chambre nuit du @culture.DateTimeFormat.GetDayName(nuit.UnencriptedNuit.DateNuit.DayOfWeek).Substring(0, 3) @nuit.UnencriptedNuit.DateNuit.ToString("dd/MM/yy") au @culture.DateTimeFormat.GetDayName(nuit.UnencriptedNuit.DateFin.Value.DayOfWeek).Substring(0, 3) @nuit.UnencriptedNuit.DateFin.Value.ToString("dd/MM/yy")
+                                                            </h3>
+                                                        }
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class=" modal-upper-cell-color border-bottom-black">
+                                                        <h5 class="text-center">Endormi au lit</h5>
+                                                        <center><img src="~/images/patients/Nuit/icone_endormi_au_lit.png" width="275" height="175" /></center>
+                                                        @if (nuit.UnencriptedNuit.DureeSommeil is null)
+                                                        {
+                                                            <p class="text-center" style="padding-top: 2%">TOTAL :<b> NULL H NULL min </b></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="text-center" style="padding-top: 2%">TOTAL :<b> @nuit.UnencriptedNuit.DureeSommeil?.Hours H @nuit.UnencriptedNuit.DureeSommeil?.Minutes min </b></p>
+                                                        }
+                                                        @if (nuit.UnencriptedNuit.ScoreNuit is null)
+                                                        {
+                                                            <p class="text-center">Score Nuit :<b class="text-@NuitCouleur"> NULL %</b></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="text-center">Score Nuit :<b class="text-@NuitCouleur"> @nuit.UnencriptedNuit.ScoreNuit %</b></p>
+                                                        }
+
+                                                    </td>
+                                                    <td class=" modal-upper-cell-color border-bottom-black border-right-black border-left-black">
+                                                        <h5 class="text-center">Réveillé au lit</h5>
+                                                        <center><img src="~/images/patients/Nuit/icone_reveille_au_lit.png" width="275" height="175" /></center>
+                                                        @if (nuit.UnencriptedNuit.DureeReveilAuLit is null)
+                                                        {
+                                                            <p class="text-center" style="padding-top: 2%">TOTAL :<b> NULL H NULL min</b> </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="text-center" style="padding-top: 2%">TOTAL : <b>@nuit.UnencriptedNuit.DureeReveilAuLit?.Hours H @nuit.UnencriptedNuit.DureeReveilAuLit?.Minutes min </b></p>
+                                                        }
+                                                        @if (nuit.UnencriptedNuit.NbReveils is null)
+                                                        {
+                                                            <p class="text-center">Nombre Réveils :<b> NULL</b></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="text-center">Nombre Réveils :<b> @nuit.UnencriptedNuit.NbReveils</b></p>
+                                                        }
+                                                    </td>
+                                                    <td class="modal-upper-cell-color border-bottom-black">
+                                                        <h5 class="text-center">Réveillé hors lit</h5>
+                                                        <center><img src="~/images/patients/Nuit/icone_hors_lit.png" width="275" height="175" /></center>
+                                                        @if (nuit.UnencriptedNuit.DureeReveilHorsLit is null)
+                                                        {
+                                                            <p class="text-center" style="padding-top: 2%">TOTAL : <b>NULL H NULL min </b></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="text-center" style="padding-top: 2%">TOTAL : <b>@nuit.UnencriptedNuit.DureeReveilHorsLit?.Hours H @nuit.UnencriptedNuit.DureeReveilHorsLit?.Minutes min </b></p>
+                                                        }
+                                                        @if (nuit.UnencriptedNuit.NbSorties is null)
+                                                        {
+                                                            <p class="text-center">Nombre Sorties : <b> NULL</b></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="text-center">Nombre Sorties : <b> @nuit.UnencriptedNuit.NbSorties</b></p>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="border-black">
+                                                        <div class="Scrollbar-Nuit" style="height:40%">
+                                                            <h2 class="text-center">Détail des sorties</h2>
+                                                            @if (nuit.UnencriptedNuit.DateDebut != null && nuit.UnencriptedNuit.DateFin != null)
+                                                            {
+                                                                <div class="row mb-1" style="width:99%; margin : auto">
+                                                                    <p class="col-6 text-center"> <b>Dans le lit à : </b> @nuit.UnencriptedNuit.DateDebut.Value.ToLocalTime().ToString("dd/MM/yyyy H\\h m\\min")</p>
+                                                                    <p class="col-6 text-center"> <b>Sortie du lit à : </b>  @nuit.UnencriptedNuit.DateFin.Value.ToLocalTime().ToString("dd/MM/yyyy H\\h m\\min") </p>
+                                                                </div>
+                                                                @if (!(nuit.UnencriptedNuit.DetailSorties is null))
+                                                                {
+                                                                    var DetailSorties = JObject.Parse(nuit.UnencriptedNuit.DetailSorties);
+                                                                    <table id="tabSortie_@patient.UnencriptedPatient.Chambre" class="margin-auto">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <th class="border-left border-right">Heure du lever</th>
+                                                                                @foreach (var Sortie in DetailSorties)
+                                                                                {
+                                                                                    DateTime HeureReveil;
+                                                                                    if (DateTime.TryParseExact(Sortie.Key.ToString(), "dd-MM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out HeureReveil))
+                                                                                    {
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        DateTime.TryParseExact(Sortie.Key.ToString(), "HH:mm:ss", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out HeureReveil);
+                                                                                    }
+                                                                                    <td class="border-right border-bottom"><center>@HeureReveil.ToLocalTime().ToString("H\\h m\\min")</center></td>
+                                                                                }
+                                                                                @if (DetailSorties.Count < 10)
+                                                                                {
+                                                                                    for (int y = 0; y < 10 - DetailSorties.Count; y++)
+                                                                                    {
+                                                                                        <td class="border-right border-bottom">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                                                    }
+                                                                                }
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="border-left border-right border-bottom">Durée du lever </th>
+                                                                                @foreach (var Sortie in DetailSorties)
+                                                                                {
+                                                                                    DateTime HeureReveil;
+                                                                                    if (DateTime.TryParseExact(Sortie.Key.ToString(), "dd-MM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out HeureReveil))
+                                                                                    {
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        DateTime.TryParseExact(Sortie.Key.ToString(), "HH:mm:ss", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out HeureReveil);
+                                                                                    }
+                                                                                    <td class="border-right border-bottom"><center>@String.Format("{0}min", Math.Round(TimeSpan.FromSeconds((double)Sortie.Value).TotalMinutes), 0)</center></td>
+                                                                                }
+                                                                                @if (DetailSorties.Count < 10)
+                                                                                {
+                                                                                    for (int y = 0; y < 10 - DetailSorties.Count; y++)
+                                                                                    {
+                                                                                        <td class="border-right border-bottom">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                                                    }
+
+                                                                                }
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <center><button class="col-4 mt-2 btn btn-primary" onclick="TableSortieTOExcel('tabSortie_@patient.UnencriptedPatient.Chambre', '@patient.UnencriptedPatient.Chambre', 'xlsx')">Télécharger le tableau</button></center>
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="row" style="width:99%;">
+                                                                    <p class="col-5 text-right"> <b>Dans le lit à : </b> NULL </p>
+                                                                    <p class="col-4 text-right"> <b>Sortie du lit à : </b> NULL</p>
+                                                                </div>
+                                                                <table class="margin-auto">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th class="border-left border-right">Heure du lever</th>
+                                                                            @for (int y = 0; y < 10; y++)
+                                                                            {
+                                                                                <td class="border-right border-bottom">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                                            }
+
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th class="border-left border-right border-bottom">Durée du lever</th>
+
+                                                                            @for (int y = 0; y < 10; y++)
+                                                                            {
+                                                                                <td class="border-right border-bottom">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                                            }
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            }
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            @{ var lastDateWeek = nuit.DateNuit.AddDays(-6);
+                                            }
+
+                                            <button type="button" class="btn btn-outline-info close mr-3" id="btn_Graph_Nuit_@patient.Id" data-dismiss="modal" data-toggle="modal" data-target="#ModalGraph" onclick='buildNightGraph(@patient.Id , @lastDateWeek.Day + "/" + @lastDateWeek.Month + " au " + @DateTime.Now.AddDays(-1).Day + "/" + @DateTime.Now.AddDays(-1).Month + " pour le résident @patient.UnencriptedPatient.Chambre"  )' aria-label="Close">Affichage des graphiques</button>
+                                            <button type="button" class="btn btn-outline-info close " id="btn_Tab_Nuit_@patient.Id" data-dismiss="modal" data-toggle="modal" data-target="#ModalTabNuit" onclick='buildNightTable(@JsonSerializer.Serialize(patient.Nuits) , @lastDateWeek.Day + "/" + @lastDateWeek.Month + " au " + @DateTime.Now.AddDays(-1).Day + "/" + @DateTime.Now.AddDays(-1).Month + " pour le résident @patient.UnencriptedPatient.Chambre", "@patient.UnencriptedPatient.Chambre")' aria-label="Close">Affichage au format tableau</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            @if (DateNuits.Count > 1)
+                            {
+                                <div class="row">
+                                    <a class=" left carousel-control-modal-prev" href="#carouselPatient_@patient.Id" data-slide="next">
+                                        <img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E" width="100" height="45">
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class=" right carousel-control-modal-next right-btn " href="#carouselPatient_@patient.Id" data-slide="prev">
+                                        <img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E" width="100" height="45">
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            }
+                            else if (DateNuits.Count == 0)
+                            {
+                                <p>Aucune nuit disponnible !</p>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Aucune nuit disponnible !</p>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+<input id="maxNuitId" type="hidden" value="@MaxId" />
+
+<!-- display every patient in a carousel-->
+
+<div id="list-patients" class="container-w-100 carousel slide carousel-multi-item" data-ride="carousel" data-interval="false">
+    <div class="container">
+        @if (Model.Count() > columnCount)
+        {
+            <div class="row" style="margin-top: 2%">
+                <a href="#list-patients" data-slide="prev"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E" width="100" height="45"></a>
+                <a class=" right-btn" href="#list-patients" data-slide="next"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E" width="100" height="45"></a>
+            </div>
+        }
+        <ol class="carousel-indicators carousel-bar-indicators">
+            @for (int i = 0; i < Model.Count(); i = i + columnCount)
+            {
+
+                @if (nbrow == 0)
+                {
+                    <li data-target="#list-patients" data-slide-to="@nbrow" class="active"></li>
+
+                    nbrow++;
+                }
+                else
+                {
+                    <li data-target="#list-patients" data-slide-to="@nbrow"></li>
+
+                    nbrow++;
+                }
+            }
+
+        </ol>
+    </div>
+    <div class="carousel-inner" role="listbox">
+
+    </div>
+    @if (Model.Count() == 0)
+    {
+        <h1 class="text-center">Il n'y a pas de résidents</h1>
+    }
+    else
+    {
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+
+            var patient = Model.ElementAt(i);
+            @BeginDivRow(ref columnIndex, i);
+            <div name="card-patients">
+                <div class="card border-secondary h-95" style="width: 20rem; margin-top:10px; ">
+                    <h5 class="card-header text-center bg-secondary">
+                        Chambre @patient.UnencriptedPatient.NumCh @patient.UnencriptedPatient.Chambre
+                    </h5>
+                    <div class="card-img-top align-center">
+                        <div class="row">
+                            <div class="col-4  m-auto ">
+                                @if (patient.Posture != null)
+                                {
+                                    string FormPNG = patient.Posture + ".png";
+                                    <img id="imgPosture_@patient.Id" src="~/images/patients/@FormPNG" class="img-patient" />
+                                }
+                                else
+                                {
+                                    <img id="imgPosture_@patient.Id" src="~/images/patients/PostureInc.png" class="img-patient" />
+                                }
+                            </div>
+                            <div class="col-8 mt-5 text-center">
+                                <b>Dernière actualisation :</b><br />
+                                @if (patient.LastUpdate == DefaultTime?.ThereIs())
+                                {
+                                    <p id="lastUpdate @patient.Id">Indisponible</p>
+                                }
+                                else
+                                {
+                                    <p id="lastUpdate @patient.Id">@patient.LastUpdate</p>
+                                }
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group-item">
+                            <b>Capteur(s) :</b>
+                            @if (patient.Capteurs.Any())
+                            {
+                                <p>
+                                    @foreach (var Capteur in patient.Capteurs)
+                                    {
+                                        @Capteur.Designation <br />
+                                    }
+                                </p>
+                            }
+                            else
+                            {
+                                <p>SANS CAPTEURS</p>
+                            }
+
+
+
+                        </div>
+
+                        <div class="list-group-item">
+                            <b>Localisation :</b><br />
+                            @if (patient.UnencriptedPatient.DerniereLocalisation == null)
+                            {
+                                <p id="lastLoc @patient.Id">Indisponible</p>
+                            }
+                            else
+                            {
+                                <p id="lastLoc @patient.Id">@patient.GetStringLoca()</p>
+                            }
+                        </div>
+
+                        <div class="list-group-item">
+                            @if (patient.UnencriptedPatient.CumulTempsAllonge >= 0)
+                            {
+                                TimeSpan CumulTempsAllongéHHMMSS = TimeSpan.FromSeconds(patient.UnencriptedPatient.CumulTempsAllonge.Value);
+                                <p id="TempsMaxallongeJ_@patient.Id"><b>Durée alitement pour la journée en cours :</b> @CumulTempsAllongéHHMMSS</p>
+                            }
+                            else if (patient.UnencriptedPatient.CumulTempsAllonge < 0)
+                            {
+                                TimeSpan CumulTempsAllongéHHMMSS = TimeSpan.FromSeconds(patient.UnencriptedPatient.CumulTempsAllonge.Value + 86400);
+                                <p id="TempsMaxallongeJ_@patient.Id"><b>Durée alitement pour la journée en cours :</b> @CumulTempsAllongéHHMMSS</p>
+                            }
+                            else
+                            {
+                                <p id="TempsMaxallongeJ_@patient.Id"><b>Durée alitement pour la journée en cours :</b> non évaluée</p>
+                            }
+
+
+                        </div>
+
+                        <div class="list-group-item" style="margin-bottom : 5%;">
+                            <b>Gestion :</b><br />
+                            @if (inf || admin)
+                            {
+                                <center>
+
+                                    <a asp-action="Details" asp-route-id="@patient.Id">Afficher</a> |
+                                    <a asp-action="Edit" asp-route-id="@patient.Id">Modifier</a> |
+                                    <a asp-action="Delete" asp-route-id="@patient.Id">Supprimer</a>
+
+                                </center>
+                            }
+                            else
+                            {
+                                <center>
+                                    <a asp-action="Details" asp-route-id="@patient.Id">Afficher</a>
+                                </center>
+                            }
+                            <center>
+                                <button class="btn btn-outline-info" id="btn_Nuit_@patient.Id" onclick="setIdPatient(@patient.Id)" style="margin-top : 5%" data-toggle="modal" data-target="#modal_@patient.Id">Détail Nuit</button>
+                                @if (patient.Jours.Any() && patient.Jours.Where(j => j.DateJour <= DateTime.Today && j.DateJour >= DateTime.Today.AddDays(-6)).Count() >= 1)
+                                {
+                                    <button class="btn btn-outline-info" id="btn_Jour_@patient.Id" onclick="fillModalJour(@patient.Id)" style="margin-top : 5%" data-toggle="modal" data-target="#ModalJour">Détail Jour</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-info" style="margin-top : 5%" data-toggle="modal" disabled>Détail Jour</button>
+                                }
+
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @EndDivRow(ref columnIndex, columnCount)}
+        @EndDivRow(ref columnIndex, columnCount)}
+</div>
+
+@functions
+{ IHtmlContent BeginDivRow(ref int columnIndex, int nbrow)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        if (columnIndex == 0 && nbrow == 0)
+        {
+            cnt = Html.Raw("<div class=\"carousel-item active\"><div class=\"row\">");
+        }
+        else if (columnIndex == 0 && nbrow != 0)
+        {
+            cnt = Html.Raw("<div class=\"carousel-item\"><div class=\"row\">");
+        }
+        return cnt;
+    }
+
+    IHtmlContent EndDivRow(ref int columnIndex, int columnCount)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        columnIndex++;
+        if (columnIndex >= columnCount)
+        {
+            columnIndex = 0;
+            cnt = Html.Raw("</div></div>");
+        }
+        return cnt;
+    } }
+

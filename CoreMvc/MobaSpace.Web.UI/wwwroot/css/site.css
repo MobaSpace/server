@@ -1,0 +1,480 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a {
+  color: black;
+}
+
+
+/* All class to change background */
+
+/* Confidential Policy */
+
+.privacyStyle p{
+    margin-bottom: 20px;
+    padding-bottom: 0px;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.privacyStyle h4 {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 25px
+}
+
+.privacyStyle h3 {
+    margin-bottom: 40px;
+    font-size: 30px;
+}
+
+.Scrollbar-Nuit{
+    height : 158px;
+    overflow : auto;
+ }
+
+.privacyLine {
+    margin-bottom: 40px;
+    margin-top: 80px;
+    border-top: 4px solid;
+    width: 50%;
+    border-top-color: rgb(0, 0, 0)
+}
+
+.privacyHeader h3 {
+    margin-bottom: 20px;
+    font-size: 30px;
+    margin-top: 40px;
+}
+
+.privacyHeader h4 {
+    margin-bottom: 20px;
+    margin-top: 40px;
+    font-size: 25px
+}
+
+.privacyHeader p {
+    margin-bottom: 20px;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.bottomTableCellFirstRow {
+    bottom: 45%;
+    position: absolute;
+}
+
+.bottomTableCellSecondRow {
+    bottom: 6%;
+    position: absolute;
+}
+
+.degrade {
+    background-image: linear-gradient(to bottom right, #0F9381 5%, #ADD8E6 40%, white 95%);
+}
+
+.bg-orange{
+  background-color: #ff863d;
+}
+
+.container-w-80{
+  width : 80%;
+  margin: auto;
+}
+
+
+.container-w-100{
+  width : 100%;
+  margin: auto;
+}
+
+.margin-auto{
+  margin: auto;
+}
+
+/* All class to change text attribute */
+.text-grey{
+  color: #595959;
+}
+
+.text-grey:hover{
+  color: #595959;
+}
+
+.text-orange{
+    color : orange;
+}
+
+.text-jaune {
+    color: #F8FF00;
+}
+
+.underline{
+  text-decoration: underline;
+}
+
+.inline{
+    display: inline;
+}
+
+.max-width{
+    width: 100%;
+}
+/* range slider */
+.range-slider {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    height: 1em;
+}
+
+
+.range-slider input[type=range] {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+input[type=range] {
+    width: 100%;
+    outline: none;
+    height: 5px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-moz-range-track {
+        background: white;
+}
+
+    input[type=range]::-moz-range-track {
+        width: 100%;
+        height: 5px;
+        cursor: pointer;
+        animate: 0.2s;
+        background: white;
+        border-radius: 1px;
+        box-shadow: none;
+        border: 0;
+        outline: 0;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        z-index: 2;
+        position: relative;
+        box-shadow: 0px 0px 0px #000;
+        border: 1px solid #2497e3;
+        height: 18px;
+        width: 18px;
+        border-radius: 25px;
+        background: #a1d0ff;
+        cursor: pointer;
+        -moz-appearance: none;
+        margin-top: -7px;
+    }
+
+
+
+.bar {
+    -webkit-appearance: none;
+    width: 100%;
+    outline: none;
+    height: 5px;
+    border-radius: 5px;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+.hiddenBar {
+    -webkit-appearance: none;
+    width: 100%;
+    outline: none;
+    height: 5px;
+    border-radius: 5px;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    visibility: hidden;
+}
+    .hiddenBar::-moz-range-thumb {
+        -webkit-appearance: none;
+        width: 100%;
+        outline: none;
+        height: 5px;
+        border: 1px solid #f0a122 !important;
+        background: #f0ce22 !important;
+        border-radius: 5px;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        visibility: visible;
+    }
+
+
+.arrondie {
+    border: 2px solid lightgrey;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+    background-color: lightblue;
+}
+
+/* modal */
+.modal-body-lg{
+    width : 75%;
+    height: 50%;
+}
+
+/** Card attribute **/
+
+.border-danger{
+  border-width: 3px;
+}
+.arrondie{
+  border:2px solid lightgrey;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
+  background-color: lightblue;
+}
+
+.bg-light-grey-t {
+    background-color: rgba(128, 128, 128, 0.30);
+}
+
+.border-warning{
+  border-width: 3px;
+}
+
+.border-secondary{
+  border-width: 3px ;
+}
+.border-orange{
+  border: 3px solid  #ff863d;  
+}
+.border-top {
+    border-top: 1px solid #595959;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #595959;
+}
+
+.border-right-black {
+    border-right: 3px solid black;
+}
+
+.border-left-black {
+    border-left: 3px solid black;
+}
+
+.border-bottom-black {
+    border-top: none !important;
+    border-bottom: 3px solid black;
+}
+
+.border-rounded {
+    background-color: transparent;
+    margin-bottom: 20px;
+    border-collapse: separate;
+    border-spacing: 0px;
+    border: 3px solid #000;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+/** size and spaces class **/
+
+.space-top-5{
+  margin-top: 5%;
+}
+
+.h-95{
+  height: 95%;
+}
+.space-top--10{
+  margin-top: -10%;
+}
+
+.space-left-11 {
+    margin-left: 11%;
+ }
+
+.space-right-10{
+    padding-right: 5%;
+}
+
+/* jauge */
+
+.jaugeSV{
+    width: 57%;
+    height: 65%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+/* button class */
+
+.btn-add{
+  float : right; 
+  cursor: pointer;
+}
+
+.btn-outline-primary {
+  color: #204572;
+  border-color: #204572;
+}
+
+.text-blue{
+  color: #204572 !important;
+}
+
+
+
+.btn-outline-primary:hover{
+  color: #fff;
+  background-color: #204572;
+  border-color: #204572;
+}
+
+.right-btn {
+    align-self: center;
+    margin-left: auto;
+}
+/* All image class*/
+
+.img-patient {
+  max-height: 75px; 
+  max-width: 75px; 
+  margin-left: 15px; 
+  margin-top: 15px
+}
+
+.img-alarmes {
+  max-height: 150px; 
+  max-width: 150px;
+  margin-left:15px; 
+  margin-top:15px
+}
+
+/* Carousel */
+.carousel-bar-indicators {
+    max-width: 60em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Modal */
+.modal-upper-cell-color:nth-child(odd) {
+    background-color: #e4e4e4;
+}
+
+.modal-down-cell-color:nth-child(2n+0) {
+    background-color: #e4e4e4;
+}
+
+    /* Sticky footer styles
+-------------------------------------------------- */
+    html {
+        font-size: 14px;
+    }
+
+    @media (min-width: 768px) {
+        html {
+            font-size: 16px;
+        }
+    }
+
+    a {
+        color: #414141;
+    }
+
+        a:hover {
+            color: black;
+        }
+
+    div {
+        color: black;
+    }
+
+    div[name="card-alarmes"] {
+            margin-left: auto;
+            margin-right: auto;
+    }
+
+    div[name="card-patients"] {
+            margin-left: auto;
+            margin-right: auto;
+    }
+
+    div[name="card-score"] {
+            margin-left: auto;
+            margin-right: auto;
+    }
+
+
+.vertical-middle {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+    .padding-report-night {
+        padding-left: 40%;
+    }
+
+
+    .font-size-x {
+        font-size: x-large;
+    }
+
+    .font-size-xxl {
+        font-size: 450%;
+    }
+
+    .font-size-xl {
+        font-size: 250%;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        color: #fff;
+        background-color: #1b6ec2;
+        border-color: #1861ac;
+    }
+
+    .box-shadow {
+        box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    }
+
+    .button.accept-policy {
+        font-size: 1rem;
+        line-height: inherit;
+    }
+
+
+    /* Sticky footer styles
+-------------------------------------------------- */
+    html {
+        position: relative;
+        min-height: 100%;
+    }
+
+    body {
+        /* Margin bottom by footer height */
+        margin-bottom: 120px
+    }
+
+    .footer {
+        position:absolute;
+        bottom: 0;
+        width: 100%;
+        white-space: nowrap;
+        line-height: 60px; /* Vertically center the text there */
+    }
+

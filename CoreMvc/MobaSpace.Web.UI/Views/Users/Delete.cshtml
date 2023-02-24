@@ -1,0 +1,21 @@
+﻿@model MobaSpace.Core.Data.Models.User
+
+@{
+    ViewData["Title"] = "Utilisateurs";
+    ViewData["sub-Title"] = " - Suppression";
+}
+
+<div class="container">
+<h1>Supprimer un utilisateur</h1>
+
+<h3>Confirmer la suppression du compte de @Model.UserName</h3>
+<div>
+    <hr />
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Supprimer" class="btn btn-danger" /> |
+        <a asp-action="Index">Retour</a>
+    </form>
+</div>
+</div>

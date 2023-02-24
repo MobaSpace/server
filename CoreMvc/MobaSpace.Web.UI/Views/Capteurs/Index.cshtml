@@ -1,0 +1,107 @@
+﻿@model IEnumerable<MobaSpace.Core.Data.Models.Capteur>
+
+@{
+    ViewData["Title"] = "Capteurs";
+}
+<style>
+    @@media (max-width: 1600px){
+        .table thead {
+        display: none;
+        }
+
+        .table tr{
+        display: block;
+        margin-bottom: 40px;
+        }
+
+        .table td {
+        display: block;
+        text-align: right;
+        }
+
+        .table td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        }
+
+        tr:nth-child(odd) {
+            background: #ECECEC;
+        }
+    }
+</style>
+<div class="container" style="margin-top: 50px">
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Logo
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Marque)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Modele)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EtatOK)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Identifiant)
+            </th>
+            <th>
+                Résident(s)
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var capteur in Model)
+        {
+        <tr>
+            <td data-label="Logo">
+                <img src="@capteur.CheminImage" style="max-height: 50px; max-width: 50px;" alt="@capteur.Marque" />
+            </td>
+            <td data-label="Marque">
+                @Html.DisplayFor(modelcapteur => capteur.Marque)
+            </td>
+            <td data-label="Modèle">
+                @Html.DisplayFor(modelcapteur => capteur.Modele)
+            </td>
+            <td data-label="Etat">
+                @if (capteur.EtatOK == true)
+                {
+                    <img src="~/images/rond_vert_256x256px.png" style="max-height: 40px; max-width: 40px;"  alt="IsOk" />
+                }
+                else
+                {
+                    <img src="~/images/rond-rouge_256x256px.png" style="max-height: 40px; max-width: 40px;"  alt="IsNotOk" />
+                }
+
+            </td>
+            <td data-label="Identifiant">
+                @capteur.Identifiant
+            </td>
+            <td data-label="Rédident(s)">
+                <ul>
+                    @foreach (var ac in capteur.ApisCapteurs.OrderBy(ac => ac.Api.Patient?.Chambre))
+                    {
+                        if (ac.Api.Patient != null)
+                        {
+                    <li>
+                        Chambre @ac.Api.Patient.UnencriptedPatient.Chambre
+                    </li>
+                        }
+                    }
+                </ul>
+            </td>
+            <td>    
+                <a asp-action="Details" asp-route-id="@capteur.Id">Détails</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+</div>

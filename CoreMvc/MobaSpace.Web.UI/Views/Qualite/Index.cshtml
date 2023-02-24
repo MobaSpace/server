@@ -1,0 +1,157 @@
+﻿@model IEnumerable<MobaSpace.Core.Data.Models.Alarme>
+@{
+    ViewData["Title"] = "Qualité";
+    DateTime DateJour = DateTime.Now;
+    DateTime DateLimite = DateJour.AddDays(-6);
+    double nbAlarme = Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date)).Count();
+    double nbAlarmeMoy = nbAlarme / 7;
+    double nbAlarmeAqui = Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && a.Acquittement != null && ((TimeSpan)(a.Acquittement - a.Creation)).TotalSeconds < 43200).Count();
+    var tempsMoyacqui = 0.0;
+    if (nbAlarmeAqui != 0)
+    {
+        tempsMoyacqui = Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && a.Acquittement != null && ((TimeSpan)(a.Acquittement - a.Creation)).TotalSeconds < 43200).Sum(a => ((TimeSpan)(a.Acquittement - a.Creation)).TotalSeconds) / nbAlarmeAqui;
+    }
+    var alarmesByPatient = Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date)).GroupBy(a => a.Patient.UnencriptedPatient.NumCh).Select(x => new { patientId = x.Key, Count = x.Count() }).ToList().OrderByDescending(x => x.Count);
+    List<int> temp = new List<int>();
+    for (int i = 12; i < 24; i = i + 2)
+    {
+        temp.Add(Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date)).Where(a => a.Creation.Hour == i || a.Creation.Hour == i + 1).Count());
+    }
+    for (int i = 0; i < 12; i = i + 2)
+    {
+        temp.Add(Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date)).Where(a => a.Creation.Hour == i || a.Creation.Hour == i + 1).Count());
+    }
+}
+
+<div class="container">
+    <h1>Rapport Hebdomadaire du @DateLimite.Date.ToShortDateString() au @DateJour.Date.ToShortDateString()</h1>
+    <br /><br />
+          <div class="row h-100  ">
+              <div id="ColGraph"  class="col-5">
+                  <div class="card h-100">
+                      <div class="card-header">
+                          <h3>Heures des alarmes</h3>
+                      </div>
+                      <div id="graphBar">
+
+                      </div>
+                  </div>
+              </div>
+              <div id="ColStatistique" class="col-5">
+
+                  <div class="row w-100">
+                      <div class="card w-100">
+                          <div class="card-header">
+                              <h3>Alarmes</h3>
+                          </div>
+                          <div class="card-body">
+                              <p><b>Nombre Total : </b> @nbAlarme </p>
+                              <p><b>Nombre moyen par jour : </b> @String.Format("{0:0.##}", nbAlarmeMoy) </p>
+                          </div>
+                      </div>
+
+                  </div>
+                  <br />
+                  <div class="row w-100">
+                      <div class="card w-100">
+                          <div class="card-header">
+                              <h3>Acquittement</h3>
+                          </div>
+                          <div class="card-body">
+                              <p><b>Temps moyen d'acquittement : </b> @String.Format("{0:%h}h {0:%m}min" , TimeSpan.FromSeconds(Math.Round(tempsMoyacqui)))</p>
+                              <p>
+                                  <b>Temps maximum d'acquittement : </b> @if (Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && a.Acquittement != null && ((DateTime)a.Acquittement - a.Creation).TotalSeconds < 43200).Any())
+                                  {
+                                      @String.Format("{0:%h}h {0:%m}min", TimeSpan.FromSeconds(Math.Round(Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && a.Acquittement != null && ((DateTime)a.Acquittement - a.Creation).TotalSeconds < 43200).Max(a => ((DateTime)a.Acquittement - a.Creation).TotalSeconds))));
+                                  }
+                                  else
+                                  {
+                                      @Html.Raw("0h 0min");
+                                  }
+
+
+                              </p>
+                              <p>
+                                  <b>Nombre d'alarmes non acquittées(ou +12h) : </b> @if (Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && a.Acquittement == null || (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && ((DateTime)a.Acquittement - a.Creation).TotalSeconds >= 43200).Any())
+                                  {
+                                      @Model.Where(a => (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && a.Acquittement == null || (a.Creation.Date <= DateJour.Date) && (a.Creation.Date >= DateLimite.Date) && ((DateTime)a.Acquittement - a.Creation).TotalSeconds >= 43200).DefaultIfEmpty().Count()
+                                  }
+                                  else
+                                  {
+                                      @Html.Raw('0');
+                                  }
+                              </p>
+                          </div>
+                      </div>
+                  </div>
+                  <br />
+                  <div class="row  w-100">
+                      <div class="card w-100">
+                          <div class="card-header">
+                              <h4>Classement des alarmes par chambre</h4>
+                          </div>
+                          <div class="card-body">
+                              @if (alarmesByPatient.Count() > 0)
+                              {
+                                  if (alarmesByPatient.Count() > 3)
+                                  {
+                                      <ol>
+                                          @for (int i = 0; i < 3; i++)
+                                          {
+                                              <li> <p> <b> Chambre @alarmesByPatient.ElementAt(i).patientId </b> ( @alarmesByPatient.ElementAt(i).Count )</p> </li>
+                                          }
+                                      </ol>
+                                  }
+                                  else
+                                  {
+                                      <ol>
+                                          @for (int i = 0; i < alarmesByPatient.Count(); i++)
+                                          {
+                                              <li> <p> <b> Chambre @alarmesByPatient.ElementAt(i).patientId </b> ( @alarmesByPatient.ElementAt(i).Count )</p> </li>
+                                          }
+                                      </ol>
+                                  }
+
+                              }
+                              else
+                              {
+                                  @Html.Raw("Pas de donnée disponible pour cette periode !")
+                              }
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/plotly/plotly-latest.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var data = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(temp))');
+
+            var graph = [
+                {
+
+                    x: ['12h-14h', '14h-16h', '16h-18h', '18h-20h', '20h-22h', '22h-00h', '00h-2h', '2h-4h', '4h-6h', '6h-8h', '8h-10h','10h-12h'],
+                    y: data,
+                    type: 'bar'
+                }
+            ];
+
+
+            var layout = {
+            };
+
+
+            var config = { responsive: true }
+
+            Plotly.newPlot('graphBar', graph, layout ,config);
+            $("ColGraph").height =  $("ColStatistique").height
+
+            });
+
+
+    </script>
+}

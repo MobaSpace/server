@@ -1,0 +1,29 @@
+﻿@using MobaSpace.Core.Data.Models
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<User>;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Accueil";
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    <meta http-equiv="refresh" content=" 0; URL=/Alarmes">
+}
+else
+{
+    <meta http-equiv="refresh" content=" 0; URL=/Identity/Account/Login">
+}
+
+<div class="container">
+    <div class="text-center space-top--10 space-right-10">
+        <img src="~/images/SySPadBienvenue.png" width="800" height="450">
+
+    </div>
+
+</div>
+
+
+
+

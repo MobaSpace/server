@@ -1,0 +1,10 @@
+﻿Bonjour {user.UserName},
+
+Merci de vous être inscrit sur MobaSpace.
+Veuillez confirmer votre compte en cliquant sur le lien suivant: {callbackUrl}
+Veuillez notez que le lien expirera dans 1 jour. Passé ce délais vous devrez vous réinscrire.
+
+Un  problème d'enregistrement ? Contactez-nous à {mailto}
+
+Salutations,
+l'équipe MobaSpace

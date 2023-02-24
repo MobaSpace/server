@@ -1,0 +1,111 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Html
+@using MobaSpace.Core.Data.Models
+@model IEnumerable<MobaSpace.Core.Data.Models.Balance>
+@inject SignInManager<User> SignInManager;
+@{
+    ViewData["Title"] = "Balances";
+    const int columnCount = 4;
+    int columnIndex = 0;
+    int nbrow = 0;
+    var admin = User.IsInRole(Roles.Administrateur);
+    var soi = User.IsInRole(Roles.Soignant);
+}
+
+<div id="divAlarm" class="container-w-100">
+    <br />
+    @if (admin)
+    {
+        <div class="container">
+            <div class="row">
+                <a class="btn btn-success right-btn" asp-action="Create">Ajouter une Balance</a>
+            </div>
+        </div>
+    }
+    <br />
+    <div id="list-Alarmes" class="container-w-100 carousel slide carousel-multi-item" data-ride="carousel">
+        <div class="container">
+            @if (Model.Count() != 0)
+            {
+                <div class="row">
+                    <a class="btn-floating" href="#list-Alarmes" data-slide="prev"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E" width="100" height="45"></a>
+                    <a class="btn-floating right-btn" href="#list-Alarmes" data-slide="next"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E" width="100" height="45"></a>
+                </div>
+            }
+        </div>
+        <ol class="carousel-indicators carousel-bar-indicators">
+            @for (int i = 0; i < Model.Count(); i = i + columnCount)
+            {
+
+                @if (nbrow == 0)
+                {
+                    <li data-target="#list-Alarmes" data-slide-to="@nbrow" class="active"></li>
+                    nbrow++;
+                }
+                else
+                {
+                    <li data-target="#list-Alarmes" data-slide-to="@nbrow"></li>
+                    nbrow++;
+                }
+
+            }
+
+        </ol>
+        <div class="carousel-inner" role="listbox"></div>
+        <!-- Show only existing data -->
+        @if (Model.Count() == 0)
+        {
+            <h1 class="text-center">Il n'y a pas de balance disponnible</h1>
+        }
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            var balance = Model.ElementAt(i);
+            @BeginDivRow(ref columnIndex, columnCount, i);
+            <div name="card-alarmes">
+                <div class="card border-secondary h-95" style="width: 20rem; margin-top:15px">
+                    <h5 class="card-header text-center bg-secondary"> @balance.Nom</h5>
+                    <div class="card-body ">
+                        <div class="list-group-item">
+                            <b>Dernière Pesée : </b><a><br /> @balance.DernierePesee</a>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Valeur : </b><a><br /> @balance.Valeur</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @EndDivRow(ref columnIndex, columnCount)
+        }
+        @EndDivRow(ref columnIndex, columnCount)
+    </div>
+</div>
+
+
+@functions
+{
+    IHtmlContent BeginDivRow(ref int columnIndex, int columnCount, int nbrow)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        if (columnIndex == 0 && nbrow == 0)
+        {
+            cnt = Html.Raw("<div class=\"carousel-item active\"><div class=\"row\">");
+        }
+        else if (columnIndex == 0 && nbrow != 0)
+        {
+            cnt = Html.Raw("<div class=\"carousel-item\"><div class=\"row \">");
+        }
+        return cnt;
+    }
+
+    IHtmlContent EndDivRow(ref int columnIndex, int columnCount)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        columnIndex++;
+        if (columnIndex >= columnCount)
+        {
+            columnIndex = 0;
+            cnt = Html.Raw("</div></div>");
+        }
+        return cnt;
+    }
+}

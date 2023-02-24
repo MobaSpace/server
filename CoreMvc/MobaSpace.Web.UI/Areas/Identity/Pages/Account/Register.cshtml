@@ -1,0 +1,30 @@
+﻿@page
+@using MobaSpace.Web.UI.ViewModels;
+@model RegisterModel
+@{
+    ViewData["Title"] = "Créer un compte";
+    ViewData["NeedPwd"] = true;
+}
+<div class="container">
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-6">
+        <p></p>
+        <section>
+            <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <h4>Nouveau compte local</h4>
+                <hr />
+                <partial name="RegisterPartial" model="Model" />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <button type="submit" class="btn btn-outline-primary">Créer</button>
+                </form>
+        </section>
+    </div>
+</div>
+<div>
+    <a asp-controller="Users" asp-action="Index">Retour</a>
+</div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

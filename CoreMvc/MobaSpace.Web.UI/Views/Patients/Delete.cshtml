@@ -1,0 +1,31 @@
+﻿@model MobaSpace.Core.Data.Models.PatientC
+
+@{
+    ViewData["Title"] = "Résidents";
+    ViewData["sub-Title"] = " - Suppression";
+}
+<div class="container">
+    <h1>Suppression</h1>
+
+    <h3>Confirmez la suppression</h3>
+    <div>
+        <h4>Résident @Model.Id</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UnencriptedPatient.Chambre)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UnencriptedPatient.Chambre)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UnencriptedPatient" />
+            <input type="submit" value="Supprimer" class="btn btn-danger" /> |
+            <a asp-action="Index">Retour</a>
+        </form>
+    </div>
+</div>

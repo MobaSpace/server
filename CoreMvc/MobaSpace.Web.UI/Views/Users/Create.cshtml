@@ -1,0 +1,94 @@
+﻿@using MobaSpace.Core.Data.Models
+@model MobaSpace.Web.UI.ViewModels.UserRoleViewModel
+
+@{ ViewData["Title"] = "Utilisateur";
+    ViewData["sub-Title"] = "- Création"; }
+
+<div class="container">
+    <h1>Création</h1>
+
+    <h4>Utilisateur</h4>
+    <hr />
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="User.UserName"></label> *
+                    <input asp-for="User.UserName" class="form-control col-11" />
+                    <span asp-validation-for="User.UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.UserSurname"></label> *
+                    <input asp-for="User.UserSurname" class="form-control col-11" />
+                    <span asp-validation-for="User.UserSurname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.UserFirstname"></label> *
+                    <input asp-for="User.UserFirstname" class="form-control col-11" />
+                    <span asp-validation-for="User.UserFirstname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.Email"></label>
+                    <input asp-for="User.Email" class="form-control col-11" />
+                    <span asp-validation-for="User.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.Password"></label> *
+                    <input asp-for="User.Password" class="password form-control col-11" style="display: inline-block !important;" />
+                    <i class="bi bi-eye-slash-fill" id="togglePassword" style="cursor: pointer"></i>
+                    <span asp-validation-for="User.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.ConfirmPassword"></label> *
+                    <input asp-for="User.ConfirmPassword" class="password form-control col-11" />
+                    <span asp-validation-for="User.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.Appel"></label>
+                    <input asp-for="User.Appel" class="form-control col-11" />
+                    <span asp-validation-for="User.Appel" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.CanalNotif"></label>
+                    <input asp-for="User.CanalNotif" class="form-control col-11" />
+                    <span asp-validation-for="User.CanalNotif" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input asp-for="User.Linked2NetSOINS" />
+                    <label asp-for="User.Linked2NetSOINS"></label>
+                    <span asp-validation-for="User.Linked2NetSOINS" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Créer" class="btn btn-outline-primary" />
+                </div>
+            </div>
+            <div class="container col-md-6">
+                <h4>Roles</h4>
+                <hr />
+                @for (int i = 0; i < Model.UserRoles.Count; i++)
+                {
+                    if (Model.UserRoles[i].Nom == Roles.Administrateur && !User.IsInRole(Roles.Administrateur))
+                    {
+
+                    }
+                    else
+                    {
+    <div class="row">
+        <div class="col-md-auto">
+            <input asp-for="UserRoles[i].Selectionne" />
+        </div>
+        <div class="col-md-auto">
+            <input asp-for="UserRoles[i].Nom" class="form-control" value="@Model.UserRoles[i].Nom" hidden />
+            <label asp-for="UserRoles[i].Nom">@Model.UserRoles[i].Nom</label>
+        </div>
+    </div>}
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/ShowPassword.js" asp-append-version="true"></script>
+}

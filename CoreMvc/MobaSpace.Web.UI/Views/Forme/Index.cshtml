@@ -1,0 +1,261 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Html
+@using MobaSpace.Core.Data.Models
+@model IEnumerable<MobaSpace.Core.Data.Models.ScoreForme>
+@inject UserManager<User> UserManager;
+
+@{ ViewData["Title"] = "Forme"; }
+<div style="margin-top: 50px">
+    @{
+        int enumerateur = 0;
+        int columnindex = 0;
+        const int columnCount = 6;
+        User CurrentUser = await UserManager.GetUserAsync(Context.User);
+        string idUser = CurrentUser.Id;
+
+    }
+
+    <input type="text" id="idUser" name="IdUser" value="@idUser" hidden>
+
+    <div class="modal" id="ModalGraphique">
+        <div class="modal-dialog" style="max-width:70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="titleGraphModal"></h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div id="GraphSVSP">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div id="GraphIC">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div id="GraphTRemp">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="ModalQCM">
+        <div class="modal-dialog" style="max-width:70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="titleGraphModal">QCM sur l'état de santé du résident</h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Les champs caractérisés par une * sont obligatoires</p>
+                    <div id="QCM">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <a class="btn btn-success text-white" style="z-index : 16; position : relative;" onclick="InitQCM()">+ Formulaire</a>
+            <a class="btn btn-danger right-btn" style="z-index : 16; position : relative;" asp-action="Delete">Réinitialiser</a>
+        </div>
+    </div>
+
+    <div id="list-score" class="container-w-100 carousel slide carousel-multi-item" data-ride="carousel" data-interval="false">
+        <div class="container">
+            @if (Model.Count() > columnCount)
+            {
+                <div class="row" style="margin-top: 2%">
+                    <a href="#list-score" data-slide="prev"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E" width="100" height="45"></a>
+                    <a class=" right-btn" href="#list-score" data-slide="next"><img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E" width="100" height="45"></a>
+                </div>
+            }
+            <ol class="carousel-indicators carousel-bar-indicators">
+                @for (int y = 0; y < Model.Count(); y = y + columnCount)
+                {
+
+                    if (enumerateur == 0)
+                    {
+                        <li data-target="#list-score" data-slide-to="@enumerateur" class="active"></li>
+
+                        enumerateur++;
+                    }
+                    else
+                    {
+                        <li data-target="#list-score" data-slide-to="@enumerateur"></li>
+
+                        enumerateur++;
+                    }
+
+                }
+            </ol>
+        </div>
+        <div class="carousel-inner" role="listbox">
+
+        </div>
+        @if (Model.Count() == 0)
+        {
+            <h1 class="text-center">Aucun score n'est disponible</h1>
+        }
+        else
+        {
+            @for (int y = 0; y < Model.Count(); y++)
+            {
+                var score = Model.ElementAt(y);
+                float? SVpercent = score.ScoreJour * 100;
+                float? SPpercent = score.ScorePred * 100;
+                float? ICpercent = score.IndiceDeConfiance * 100;
+                @BeginDivRow(ref columnindex, y);
+                @if (columnindex % 3 == 0)
+                {
+                    // every 3 card generate a new row
+                    @Html.Raw("<div class= \"container d-flex justify-content-center\"><div class=\"row\">");
+                }
+                columnindex++;
+
+                <div name="card-score">
+                    <div class="card" style="width:20rem; margin-top:10px">
+                        @if (score.Date.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd"))
+                        {
+                            <h5 class="card-header text-center bg-success" onclick="InitQCM(@score.NumCh)">
+                                Chambre @score.NumCh
+                            </h5>
+                        }
+                        else if (score.Date.ToString("yyyy-MM-dd") == DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"))
+                        {
+                            <h5 class="card-header text-center bg-secondary" onclick="InitQCM(@score.NumCh)">
+                                Chambre @score.NumCh
+                            </h5>
+                        }
+                        else
+                        {
+                            <h5 class="card-header text-center bg-warning" onclick="InitQCM(@score.NumCh)">
+                                Chambre @score.NumCh
+                            </h5>
+                        }
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="container text-center">
+                                    @if (score.ScoreJour != null)
+                                    {
+                                        <p style="margin-bottom:0"><b>Score Veille</b></p>
+                                        <div id="gaugeSV_@y" class="jaugeSV" value="@SVpercent" style="margin-bottom:5%; margin-top:-5%;"></div>
+                                        //<img src="~/images/scores/jauge_@StatusSV" width="75" height="75" />
+                                    }
+                                    else
+                                    {
+                                        <p style="margin-bottom:0"><b>Score Veille</b></p>
+                                        <p>Pas d'information</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row w-100" style="margin:auto;">
+                                    <div class="col col-6 text-center" style="margin-top:auto; margin-bottom:auto;">
+                                        <p style="margin-bottom:0"><b>Score Prédit</b></p>
+                                    </div>
+                                    <div class="col col-6 text-center" style="margin-top:auto; margin-bottom:auto;">
+                                        <p style="margin-bottom:0"><b>Indice de Confiance</b></p>
+                                    </div>
+                                </div>
+                                <div class="row w-100" style="margin:auto;">
+                                    <div class="col col-6 text-center">
+                                        @if (score.ScorePred != null)
+                                        {
+                                            <div id="gaugeSP_@y" value="@SPpercent" style="margin-bottom:7%;  margin-top:-5%;"></div>
+                                            //<img src="~/images/scores/jauge_@StatusSP" width="75" height="75" />
+                                        }
+                                        else
+                                        {
+                                            <p>Pas d'information</p>
+                                        }
+                                    </div>
+                                    <div class="col col-6 text-center">
+                                        @if (score.IndiceDeConfiance != null)
+                                        {
+                                            <div id="gaugeIC_@y" value="@ICpercent" style="margin-bottom:7%;  margin-top:-5%;"></div>
+                                            //<img src="~/images/scores/jauge_@StatusIC" width="75" height="75" />
+                                        }
+                                        else
+                                        {
+                                            <p>Pas d'information</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mb-lg-3 "><b>Dernière saisie :</b>  &nbsp; @score.Date.ToString("dd/MM/yyyy")</div>
+                            <div class="row justify-content-center">
+
+                                <btn class="btn btn-primary" style="margin-bottom:5px;" onclick="buildScoreGraph(@score.NumCh)" data-toggle="modal" data-target="#ModalGraphique">Evolution 7j</btn>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (columnindex % 3 == 0 && columnindex != 0 || y == Model.Count() - 1)
+                {
+                    @Html.Raw("</div></div>");
+                }
+                if (y % 5 == 0 && y != 0)
+                {
+                    @Html.Raw("</div></div>");
+                    columnindex = 0;
+                }
+            }
+            if (columnindex % 6 != 0)
+            {
+                @Html.Raw("</div></div>");
+            }
+        }
+    </div>
+</div>
+@section scripts{
+    <script src="~/lib/justgage/justgage.js" asp-append-version="true"></script>
+    <script src="~/lib/plotly/plotly-latest.min.js" asp-append-version="true"></script>
+    <script src="~/lib/justgage/raphael-2.1.4.min.js" asp-append-version="true"></script>
+    <script src="~/js/Jauge.js" asp-append-version="true"></script>
+    <script src="~/js/hideCarouselControl.js" asp-append-version="true"></script>
+    <script src="~/js/StatisticForme.js" asp-append-version="true"></script>
+    <script src="~/js/QCMForm.js" asp-append-version="true"></script>
+}
+@functions
+{
+    // Generate a element of carousel
+    IHtmlContent BeginDivRow(ref int columnIndex, int nbrow)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        if (columnIndex == 0 && nbrow == 0)
+        {
+            cnt = Html.Raw("<div class=\"carousel-item active\"><div class=\"row\">");
+        }
+        else if (columnIndex == 0 && nbrow != 0)
+        {
+            cnt = Html.Raw("<div class=\"carousel-item \"><div class=\"row\">");
+        }
+        return cnt;
+    }
+    // end div
+    IHtmlContent EndDivRow(ref int columnIndex, int columnCount)
+    {
+        IHtmlContent cnt = Html.Raw("");
+        if (columnIndex >= columnCount)
+        {
+            columnIndex = 1;
+            cnt = Html.Raw("</div></div>");
+        }
+        else
+        {
+            columnIndex++;
+        }
+        return cnt;
+    }
+}

@@ -1,0 +1,45 @@
+﻿
+@model MobaSpace.Web.UI.ViewModels.OAuth2ApiViewModel;
+
+@{
+    ViewData["Title"] = "Api";
+    ViewData["sub-Tilte"] = " - Ajout d'un Trackers";
+}
+
+<div class="container ">
+    <h1><center>Création d'un Tracker</center></h1>
+    <form asp-action="CreateTrackers" enctype="multipart/form-data">
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Api.ApiName"></label>
+                    <input asp-for="Api.ApiName" value="@ViewData["NameApi"]" class="form-control" readonly/>
+                    <span asp-validation-for="Api.ApiName" class="text-danger" ></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Capteur.Identifiant"></label> (MAC)
+                    <input asp-for="Capteur.Identifiant" pattern="^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$" class="form-control" />
+                    <span asp-validation-for="Capteur.Identifiant" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Capteur.Marque"></label>
+                    <input asp-for="Capteur.Marque" value="@ViewData["Marque"]" class="form-control" readonly/>
+                    <span asp-validation-for="Capteur.Identifiant" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Capteur.Modele"></label>
+                    <select asp-for="Capteur.Modele" class="form-control">
+                        <option value="">Choisir une version</option>
+                        <option>MoBY V1</option>
+                    </select>
+                    <span asp-validation-for="Capteur.Modele" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="submit" value="Créer" class="btn btn-outline-primary" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

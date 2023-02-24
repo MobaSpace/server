@@ -1,0 +1,113 @@
+﻿@using MobaSpace.Core.Data.Models
+@model MobaSpace.Core.Data.Models.PatientC
+
+@{
+    var admin = User.IsInRole(Roles.Administrateur);
+    var soi = User.IsInRole(Roles.Soignant);
+    var inf = User.IsInRole(Roles.Infirmier);
+    ViewData["Title"] = "Résidents";
+    ViewData["sub-Title"] = " - Détails";
+}
+<div class="container">
+    <h1>Détails</h1>
+
+    <div>
+        <h4>Résident @Model.Id</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Chambre)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.UnencriptedPatient.Chambre)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.NumCh)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.UnencriptedPatient.NumCh)
+            </dd>
+            <dt class="col-sm-4">
+                Heure de coucher
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.Coucher_h != null && Model.Coucher_min != null)
+                {
+                    string str = Model.Coucher_h.Value.ToString("D2") + ":" + Model.Coucher_min.Value.ToString("D2");
+                    @Html.Raw(str);
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Heure de lever
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.Lever_h != null && Model.Lever_min != null)
+                {
+                    string str = Model.Lever_h.Value.ToString("D2") + ":" + Model.Lever_min.Value.ToString("D2");
+                    @Html.Raw(str);
+                }
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.DureeMaxHorsLit_min)
+            </dt>
+            <dd class="col-sm-6">
+                @Html.DisplayFor(model => model.DureeMaxHorsLit_min)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.CumulTempsAllonge)
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.CumulTempsAllonge != null)
+                {
+                    @Html.Raw(TimeSpan.FromSeconds(30/*Model.CumulTempsAllonge.Value*/).ToString())
+                }
+            </dd>
+            <dt class="col-sm-4"> 
+                @Html.DisplayNameFor(model => model.TempsMaxAllongeJour)
+            </dt>
+            <dd class="col-sm-6">
+                @if (Model.TempsMaxAllongeJour != null)
+                {
+                    @Html.Raw(TimeSpan.FromSeconds(Model.TempsMaxAllongeJour.Value).ToString())
+                }
+            </dd>
+            <dt class="col-sm-4">
+                Contacts
+            </dt>
+            <dd class="col-sm-6">
+                <ul>
+                    @foreach (var contact in Model.Contacts)
+                    {
+                        <li>@contact.Utilisateur.UserName</li>
+                    }
+                </ul>
+            </dd>
+            <dt class="col-sm-4">
+                Apis
+            </dt>
+            <dd class="col-sm-6">
+                <ul>
+                    @foreach (var api in Model.Apis)
+                    {
+                        <li>
+                            @api.Provider
+                            <ul>
+                                @foreach (var capteur in api.Capteurs)
+                                {
+                                    <li>@capteur.DesignationComplete</li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <div>
+        @if (inf || admin)
+        {
+            @Html.ActionLink("Modifier |", "Edit", new { id = Model.Id }) 
+        }
+        <a asp-action="Index">Retour</a>
+    </div>
+</div>

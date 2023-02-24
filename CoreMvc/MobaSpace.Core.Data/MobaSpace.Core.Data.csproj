@@ -1,0 +1,250 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200406112737_ajout date creation alarme et date acquittement et utilisateur signataire.cs" />
+    <Compile Remove="Migrations\20200406112737_ajout date creation alarme et date acquittement et utilisateur signataire.Designer.cs" />
+    <Compile Remove="Migrations\20200505133225_simplify OAuth2 table.cs" />
+    <Compile Remove="Migrations\20200505133225_simplify OAuth2 table.Designer.cs" />
+    <Compile Remove="Migrations\20200518091713_contact.cs" />
+    <Compile Remove="Migrations\20200518091713_contact.Designer.cs" />
+    <Compile Remove="Migrations\20200518115227_test.cs" />
+    <Compile Remove="Migrations\20200518115227_test.Designer.cs" />
+    <Compile Remove="Migrations\20200518125658_correct table contacts_patients.cs" />
+    <Compile Remove="Migrations\20200518125658_correct table contacts_patients.Designer.cs" />
+    <Compile Remove="Migrations\20200518125830_correct table contacts_patients.cs" />
+    <Compile Remove="Migrations\20200518125830_correct table contacts_patients.Designer.cs" />
+    <Compile Remove="Migrations\20200518125940_correct table contacts_patients.cs" />
+    <Compile Remove="Migrations\20200518125940_correct table contacts_patients.Designer.cs" />
+    <Compile Remove="Migrations\20200723131857_initial.cs" />
+    <Compile Remove="Migrations\20200723131857_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200723132422_initial.cs" />
+    <Compile Remove="Migrations\20200723132422_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200723132542_initial.cs" />
+    <Compile Remove="Migrations\20200723132542_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200723133037_initial.cs" />
+    <Compile Remove="Migrations\20200723133037_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200723142011_initial.cs" />
+    <Compile Remove="Migrations\20200723142011_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200723142543_initial.cs" />
+    <Compile Remove="Migrations\20200723142543_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200930132153_Ajout nuits 2.cs" />
+    <Compile Remove="Migrations\20200930132153_Ajout nuits 2.Designer.cs" />
+    <Compile Remove="Migrations\20201001120938_Update Nuit.cs" />
+    <Compile Remove="Migrations\20201001120938_Update Nuit.Designer.cs" />
+    <Compile Remove="Migrations\20201008110755_Update nuit patient UniqueKey.cs" />
+    <Compile Remove="Migrations\20201008110755_Update nuit patient UniqueKey.Designer.cs" />
+    <Compile Remove="Migrations\20201008112905_Update nuit patient unique key.cs" />
+    <Compile Remove="Migrations\20201008112905_Update nuit patient unique key.Designer.cs" />
+    <Compile Remove="Migrations\20201008112940_Update nuit patient unique key.cs" />
+    <Compile Remove="Migrations\20201008112940_Update nuit patient unique key.Designer.cs" />
+    <Compile Remove="Migrations\20201120160613_Table jour init 0.cs" />
+    <Compile Remove="Migrations\20201120160613_Table jour init 0.Designer.cs" />
+    <Compile Remove="Migrations\20201124145851_Ajout nouveau role infirmier .cs" />
+    <Compile Remove="Migrations\20201124145851_Ajout nouveau role infirmier .Designer.cs" />
+    <Compile Remove="Migrations\20201125095831_init.cs" />
+    <Compile Remove="Migrations\20201125095831_init.Designer.cs" />
+    <Compile Remove="Migrations\20201125100518_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201125100518_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20201125103224_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201125103224_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20201126081109_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201126081109_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20201126083540_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201126083540_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20201126084138_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201126084138_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20201126100208_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201126100208_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20201126101835_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201126101835_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20201126102246_Modification des roles.cs" />
+    <Compile Remove="Migrations\20201126102246_Modification des roles.Designer.cs" />
+    <Compile Remove="Migrations\20210204072718_Modification de la table Patient.cs" />
+    <Compile Remove="Migrations\20210204072718_Modification de la table Patient.Designer.cs" />
+    <Compile Remove="Migrations\20210204122455_Création CheckList.cs" />
+    <Compile Remove="Migrations\20210204122455_Création CheckList.Designer.cs" />
+    <Compile Remove="Migrations\20210205083200_Modification CheckList.cs" />
+    <Compile Remove="Migrations\20210205083200_Modification CheckList.Designer.cs" />
+    <Compile Remove="Migrations\20210205083923_Modification CheckList.cs" />
+    <Compile Remove="Migrations\20210205083923_Modification CheckList.Designer.cs" />
+    <Compile Remove="Migrations\20210205084619_Modification CheckList.cs" />
+    <Compile Remove="Migrations\20210205084619_Modification CheckList.Designer.cs" />
+    <Compile Remove="Migrations\20210205084849_Création CheckList.cs" />
+    <Compile Remove="Migrations\20210205084849_Création CheckList.Designer.cs" />
+    <Compile Remove="Migrations\20210205090221_Modification CheckList.cs" />
+    <Compile Remove="Migrations\20210205090221_Modification CheckList.Designer.cs" />
+    <Compile Remove="Migrations\20210205090912_Création CheckList.cs" />
+    <Compile Remove="Migrations\20210205090912_Création CheckList.Designer.cs" />
+    <Compile Remove="Migrations\20210209134254_Chambre string to int.cs" />
+    <Compile Remove="Migrations\20210209134254_Chambre string to int.Designer.cs" />
+    <Compile Remove="Migrations\20210209134850_Chambre string to int.cs" />
+    <Compile Remove="Migrations\20210209134850_Chambre string to int.Designer.cs" />
+    <Compile Remove="Migrations\20210428134522_Add Trackers Table.cs" />
+    <Compile Remove="Migrations\20210428134522_Add Trackers Table.Designer.cs" />
+    <Compile Remove="Migrations\20210430074129_Table jour ajout de NbPas.cs" />
+    <Compile Remove="Migrations\20210430074129_Table jour ajout de NbPas.Designer.cs" />
+    <Compile Remove="Migrations\20210430074854_Text to jsonb Table Trackers.cs" />
+    <Compile Remove="Migrations\20210430074854_Text to jsonb Table Trackers.Designer.cs" />
+    <Compile Remove="Migrations\20210430075315_Text to jsonb Table Trackers.cs" />
+    <Compile Remove="Migrations\20210430075315_Text to jsonb Table Trackers.Designer.cs" />
+    <Compile Remove="Migrations\20210503125215_Mise en place des scripts de chiffrements.cs" />
+    <Compile Remove="Migrations\20210503125215_Mise en place des scripts de chiffrements.Designer.cs" />
+    <Compile Remove="Migrations\20210503131350_Mise en place des scripts de chiffrements.cs" />
+    <Compile Remove="Migrations\20210503131350_Mise en place des scripts de chiffrements.Designer.cs" />
+    <Compile Remove="Migrations\20210525132945_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210525132945_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210525150643_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210525150643_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526082837_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210526082837_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526090941_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210526090941_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526093520_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210526093520_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526094033_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210526094033_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526141329_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210526141329_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526142339_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210526142339_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526142718_Lien entre les views et les classes.cs" />
+    <Compile Remove="Migrations\20210526142718_Lien entre les views et les classes.Designer.cs" />
+    <Compile Remove="Migrations\20210526150518_TEST.cs" />
+    <Compile Remove="Migrations\20210526150518_TEST.Designer.cs" />
+    <Compile Remove="Migrations\20210527064941_Changement du nom des tables de chiffrement.cs" />
+    <Compile Remove="Migrations\20210527064941_Changement du nom des tables de chiffrement.Designer.cs" />
+    <Compile Remove="Migrations\20210527123341_TEST.cs" />
+    <Compile Remove="Migrations\20210527123341_TEST.Designer.cs" />
+    <Compile Remove="Migrations\20210527123655_TEST.cs" />
+    <Compile Remove="Migrations\20210527123655_TEST.Designer.cs" />
+    <Compile Remove="Migrations\20210527124237_TEST.cs" />
+    <Compile Remove="Migrations\20210527124237_TEST.Designer.cs" />
+    <Compile Remove="Migrations\20210527124507_TEST.cs" />
+    <Compile Remove="Migrations\20210527124507_TEST.Designer.cs" />
+    <Compile Remove="Migrations\20210527125340_Recréation des clés composées.cs" />
+    <Compile Remove="Migrations\20210527125340_Recréation des clés composées.Designer.cs" />
+    <Compile Remove="Migrations\20210528065625_Test.cs" />
+    <Compile Remove="Migrations\20210528065625_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528074409_Test.cs" />
+    <Compile Remove="Migrations\20210528074409_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528080936_Test.cs" />
+    <Compile Remove="Migrations\20210528080936_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528091714_Test.cs" />
+    <Compile Remove="Migrations\20210528091714_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528093056_Test.cs" />
+    <Compile Remove="Migrations\20210528093056_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528093241_Test.cs" />
+    <Compile Remove="Migrations\20210528093241_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528094027_Test2.cs" />
+    <Compile Remove="Migrations\20210528094027_Test2.Designer.cs" />
+    <Compile Remove="Migrations\20210528095632_Test.cs" />
+    <Compile Remove="Migrations\20210528095632_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528100436_Test.cs" />
+    <Compile Remove="Migrations\20210528100436_Test.Designer.cs" />
+    <Compile Remove="Migrations\20210528114147_Correction des problèmes de migration.cs" />
+    <Compile Remove="Migrations\20210528114147_Correction des problèmes de migration.Designer.cs" />
+    <Compile Remove="Migrations\20210528115526_Correction des problèmes de migration mise en place des tables de substitution .cs" />
+    <Compile Remove="Migrations\20210528115526_Correction des problèmes de migration mise en place des tables de substitution .Designer.cs" />
+    <Compile Remove="Migrations\20210528121836_Copie des données.cs" />
+    <Compile Remove="Migrations\20210528121836_Copie des données.Designer.cs" />
+    <Compile Remove="Migrations\20210528141818_ Suppression des anciennes tables.cs" />
+    <Compile Remove="Migrations\20210528141818_ Suppression des anciennes tables.Designer.cs" />
+    <Compile Remove="Migrations\20210531073400_Tentative de correction.cs" />
+    <Compile Remove="Migrations\20210531073400_Tentative de correction.Designer.cs" />
+    <Compile Remove="Migrations\20210531073809_Tentative de correction.cs" />
+    <Compile Remove="Migrations\20210531073809_Tentative de correction.Designer.cs" />
+    <Compile Remove="Migrations\20210531075545_Tentative de correction.cs" />
+    <Compile Remove="Migrations\20210531075545_Tentative de correction.Designer.cs" />
+    <Compile Remove="Migrations\20210531090954_Verife.cs" />
+    <Compile Remove="Migrations\20210531090954_Verife.Designer.cs" />
+    <Compile Remove="Migrations\20210531092247_Verife.cs" />
+    <Compile Remove="Migrations\20210531092247_Verife.Designer.cs" />
+    <Compile Remove="Migrations\20210531093721_Verife.cs" />
+    <Compile Remove="Migrations\20210531093721_Verife.Designer.cs" />
+    <Compile Remove="Migrations\20210531114855_Liens entre les views et les champs.cs" />
+    <Compile Remove="Migrations\20210531114855_Liens entre les views et les champs.Designer.cs" />
+    <Compile Remove="Migrations\20210531115050_Liens entre les views et les champs.cs" />
+    <Compile Remove="Migrations\20210531115050_Liens entre les views et les champs.Designer.cs" />
+    <Compile Remove="Migrations\20210531115355_Liens entre les views et les champs.cs" />
+    <Compile Remove="Migrations\20210531115355_Liens entre les views et les champs.Designer.cs" />
+    <Compile Remove="Migrations\20210531115621_Liens entre les views et les champs.cs" />
+    <Compile Remove="Migrations\20210531115621_Liens entre les views et les champs.Designer.cs" />
+    <Compile Remove="Migrations\20210531115905_Liens entre les views et les champs.cs" />
+    <Compile Remove="Migrations\20210531115905_Liens entre les views et les champs.Designer.cs" />
+    <Compile Remove="Migrations\20210531120347_Liens entre les views et les champs.cs" />
+    <Compile Remove="Migrations\20210531120347_Liens entre les views et les champs.Designer.cs" />
+    <Compile Remove="Migrations\20210531121224_Liens entre les views et les champs.cs" />
+    <Compile Remove="Migrations\20210531121224_Liens entre les views et les champs.Designer.cs" />
+    <Compile Remove="Migrations\20210531122052_Verife.cs" />
+    <Compile Remove="Migrations\20210531122052_Verife.Designer.cs" />
+    <Compile Remove="Migrations\20210531124541_Verifier.cs" />
+    <Compile Remove="Migrations\20210531124541_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531130257_Verifier.cs" />
+    <Compile Remove="Migrations\20210531130257_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531130835_Verifier.cs" />
+    <Compile Remove="Migrations\20210531130835_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531140659_Verifier.cs" />
+    <Compile Remove="Migrations\20210531140659_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531141336_Verifier.cs" />
+    <Compile Remove="Migrations\20210531141336_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531141855_Verifier.cs" />
+    <Compile Remove="Migrations\20210531141855_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531142114_Verifier.cs" />
+    <Compile Remove="Migrations\20210531142114_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531142434_Verifier.cs" />
+    <Compile Remove="Migrations\20210531142434_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210531145551_Verifier.cs" />
+    <Compile Remove="Migrations\20210531145551_Verifier.Designer.cs" />
+    <Compile Remove="Migrations\20210602132923_test.cs" />
+    <Compile Remove="Migrations\20210602132923_test.Designer.cs" />
+    <Compile Remove="Migrations\20210623131349_Suppression des champs de fréquences.cs" />
+    <Compile Remove="Migrations\20210623131349_Suppression des champs de fréquences.Designer.cs" />
+    <Compile Remove="Migrations\20210629120019_Ajout de la table ScoreForme.cs" />
+    <Compile Remove="Migrations\20210629120019_Ajout de la table ScoreForme.Designer.cs" />
+    <Compile Remove="Migrations\20210923093411_Modification de patient et jour.cs" />
+    <Compile Remove="Migrations\20210923093411_Modification de patient et jour.Designer.cs" />
+    <Compile Remove="Migrations\20210924074129_Modification des tables jours et trackers.cs" />
+    <Compile Remove="Migrations\20210924074129_Modification des tables jours et trackers.Designer.cs" />
+    <Compile Remove="Migrations\20211001065320_Modification de triggers Update de la table trackers.cs" />
+    <Compile Remove="Migrations\20211001065320_Modification de triggers Update de la table trackers.Designer.cs" />
+    <Compile Remove="Migrations\20220207084709_AddHistoriqueTable.cs" />
+    <Compile Remove="Migrations\20220207084709_AddHistoriqueTable.Designer.cs" />
+    <Compile Remove="Migrations\20220207124025_UpdatePatient.cs" />
+    <Compile Remove="Migrations\20220207124025_UpdatePatient.Designer.cs" />
+    <Compile Remove="Migrations\20220207124218_UpdatePatient.cs" />
+    <Compile Remove="Migrations\20220207124218_UpdatePatient.Designer.cs" />
+    <Compile Remove="Migrations\20220211072454_Fix2InfoBlocChambreView.cs" />
+    <Compile Remove="Migrations\20220211072454_Fix2InfoBlocChambreView.Designer.cs" />
+    <Compile Remove="Migrations\20220211084027_Fix5InfoBlocChambreView.cs" />
+    <Compile Remove="Migrations\20220211084027_Fix5InfoBlocChambreView.Designer.cs" />
+    <Compile Remove="Migrations\20220218160151_Update EtatOk Apis true default.cs" />
+    <Compile Remove="Migrations\20220218160151_Update EtatOk Apis true default.Designer.cs" />
+    <Compile Remove="Migrations\20220316091212_Update InfoBlocChambre.cs" />
+    <Compile Remove="Migrations\20220316091212_Update InfoBlocChambre.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.Fitbit" Version="3.1.3" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MobaSpace.Core\MobaSpace.Core.csproj" />
+  </ItemGroup>
+
+</Project>

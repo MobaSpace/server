@@ -1,0 +1,18 @@
+﻿@model MobaSpace.Core.Data.Models.User
+<html>
+<head>
+</head>
+<body>
+    <p>Bonjour @Model.UserName,</p>
+
+    <p>Merci de vous êtes enregistré sur MobaSpace.</p>
+    <p>Merci de confirmer votre mot de passe en <a href='@Html.Raw(@ViewBag.callbackurl)'>cliquant ici</a>
+    <p>
+    <p>Veuillez noter que ce lien expire dans 1 jour. Passé ce délais vous devrez vous réinscrire.</p>
+    <p>Un problème avec l'enregistrement ? Contactez nous sur <a href='mailto:{@ViewBag.mailto}'>{@ViewBag.mailto}</a></p>
+
+    <p>Salutation,</p>
+    <p>l'équipe MobaSpace.</p>
+    <img src="cid:logo" style="width: 95px; height: 40px">
+</body>
+</html>

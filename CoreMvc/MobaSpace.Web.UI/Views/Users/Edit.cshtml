@@ -1,0 +1,112 @@
+﻿@using MobaSpace.Core.Data.Models
+@model MobaSpace.Web.UI.ViewModels.UserRoleViewModel
+
+@{ ViewData["Title"] = "Utilisateurs";
+    ViewData["sub-Title"] = " - Éditer"; }
+<div class="container">
+    <h1>Modifier</h1>
+
+    <h4>@Model.User.UserName</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="User.Id" />
+                @if (User.IsInRole(Roles.Administrateur) || User.IsInRole(Roles.Infirmier))
+                {
+                    <label class="control-label">Roles</label>
+                    <div class="container">
+                        @for (int i = 0; i < Model.UserRoles.Count; i++)
+                        {
+                            if (Model.UserRoles[i].Nom == Roles.Administrateur && !User.IsInRole(Roles.Administrateur) || Model.UserRoles[i].Nom == Roles.Infirmier && !User.IsInRole(Roles.Infirmier) && !User.IsInRole(Roles.Administrateur))
+                            {
+
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <input asp-for="@Model.UserRoles[i].Selectionne" />
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <input asp-for="@Model.UserRoles[i].Nom" class="form-control" hidden />
+                                        <label>@Model.UserRoles[i].Nom</label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <hr />
+                }
+
+            <div class="container">
+
+                <h4>Information utilisateur</h4>
+                <div class="form-group">
+                    <label asp-for="User.UserName"></label>
+                    <input asp-for="@Model.User.UserName" class="form-control col-11" />
+                    <span asp-validation-for="User.UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.UserFirstname"></label>
+                    <input asp-for="@Model.User.UserFirstname" class="form-control col-11" />
+                    <span asp-validation-for="User.UserFirstname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.UserSurname"></label>
+                    <input asp-for="@Model.User.UserSurname" class="form-control col-11" />
+                    <span asp-validation-for="User.UserSurname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe actuel</label>
+                    <input id="passwordHash" type="password" value="@Model.User.PasswordHash" class="form-control col-11" style="display: inline-block !important;" />
+                </div>
+                <div class="form-group">
+                    <label>Nouveau mot de passe</label>
+                    <input id="password" type="password" asp-for="User.Password" onkeyup="check();" class="password form-control col-11" style="display: inline-block !important;" />
+                    <i class="bi bi-eye-slash-fill" id="togglePassword" style="cursor: pointer"></i>
+                </div>
+                <div class="form-group">
+                    <label>Confirmation du nouveau mot de passe</label>
+                    <input id="confirm_password" type="password" asp-for="User.ConfirmPassword" class="password form-control col-11" onkeyup="check();" />
+                    <span id='message'></span>
+                </div>
+                <div class="form-group">
+                    <label>Numero de appel voix</label>
+                    <input type="text" asp-for="@Model.User.Appel" value="@Model.User.Appel" class="form-control col-11" />
+                    <span asp-validation-for="User.Appel" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.CanalNotif"></label>
+                    <input type="text" asp-for="@Model.User.CanalNotif" value="@Model.User.CanalNotif" class="form-control col-11" />
+                </div>
+                @if (User.IsInRole(Roles.Administrateur) || User.IsInRole(Roles.Infirmier))
+                {
+                    <div class="form-group">
+                        <input asp-for="@Model.User.Linked2NetSOINS" />
+                        <label asp-for="User.Linked2NetSOINS"></label>
+                        <span asp-validation-for="User.Linked2NetSOINS" class="text-danger"></span>
+                    </div>
+                }
+                <br />
+                <br />
+            </div>
+                <div class="form-group">
+                    <input type="submit" value="Sauver" class="btn btn-outline-primary" />
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+    <div>
+        <a asp-action="Index">Retour</a>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/CheckPassword.js" asp-append-version="true"></script>
+    <script src="~/js/ShowPassword.js" asp-append-version="true"></script>
+}

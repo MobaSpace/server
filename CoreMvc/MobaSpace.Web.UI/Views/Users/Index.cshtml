@@ -1,0 +1,97 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using MobaSpace.Core.Data.Models
+@model IEnumerable<MobaSpace.Web.UI.ViewModels.UserRoleViewModel>
+
+@{
+    ViewData["Title"] = "Utilisateurs";
+    ViewData["sub-Title"] = " - Index";
+}
+<style>
+    @@media (max-width: 1600px) {
+        .table thead {
+            display: none;
+        }
+
+        .table tr {
+            display: block;
+            margin-bottom: 40px;
+        }
+
+        .table td {
+            display: block;
+            text-align: right;
+        }
+
+        .table th {
+            display: block;
+            text-align: right;
+        }
+
+            .table th:before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+            }
+
+        .table td:before {
+            content: attr(data-label);
+            float: left;
+            font-weight: bold;
+        }
+
+        tr {
+            background: #FFFFFF;
+        }
+
+            tr:nth-child(odd) {
+                background: #ECECEC;
+            }
+    }
+</style>
+<div class="container">
+    <div class="container">
+        <div class="row">
+            <a class="btn btn-success right-btn" asp-action="Create">Ajouter un Utilisateur</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <input id="searchbar" placeholder="Recherche par nom de famille ..."  class="form-control mr-1 col-3 mb-3" type="text" /> <i id="searchIcon" class="bi bi-search" style="padding-top : 0.5%; cursor:pointer;"></i>
+        </div>
+        <div id="listUsers">
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        updatePartialView();
+
+        document.getElementById("searchIcon").addEventListener('click', updatePartialView);
+        document.getElementById("searchbar").addEventListener('change', updatePartialView);
+
+
+        // Update partial alarme
+        function updatePartialView() {
+            var test = document.getElementById("searchbar").value
+                $.ajax({
+                    url: "/Users/_ListUsersPartial",
+                    type: 'GET',
+                    data: { LastName: test },
+                    success: function (partialView) {
+
+                        $('#listUsers').html(partialView);
+
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        console.error("error during view update");
+                    }
+                });
+
+        }
+    </script>
+}
